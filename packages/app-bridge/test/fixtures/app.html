@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>App Bridge test app</title>
+<script type="module">
+  // Test app loaded in an iframe. Same-origin tests drive it through window.createApp / window.rawSend.
+  // Cross-origin tests (?scenario=...) can't reach in, so it runs a scenario and reports to the parent.
+  import { createApp } from '../../src/index.ts';
+  window.createApp = createApp;
+  window.received = [];
+  addEventListener('message', (e) => window.received.push(e.data));
+  window.rawSend = (msg) => parent.postMessage(msg, '*');
+  window.postTo = (target, msg) => target.postMessage(msg, '*');
+  const q = new URLSearchParams(location.search);
+  const report = (result) => parent.postMessage({ testReport: result }, '*');
+  if (q.get('scenario') === 'basic') {
+    let app;
+    try {
+      app = createApp({ hostOrigin: q.get('host'), exactHostOrigin: q.get('exact') ?? undefined, timeout: Number(q.get('timeout') ?? 3000) });
+    } catch (e) { report({ ok: false, thrown: true, message: e.message }); }
+    if (app) {
+      try {
+        const info = await app.ready;
+        await app.toast.show('Saved');
+        const token = await app.getSessionToken();
+        report({ ok: true, info, token, hostOrigin: app.hostOrigin });
+      } catch (e) { report({ ok: false, code: e.code, message: e.message, hostOrigin: app.hostOrigin }); }
+    }
+  }
+  window.appReady = true;
+</script>

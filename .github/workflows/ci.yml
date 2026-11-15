@@ -1,0 +1,34 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build
+      - run: npm test
+      - run: node scripts/build-docs.mjs
+      - run: node scripts/test-packages.mjs chromium,webkit
+
+  # The component suite in the other engines (the main job runs it in Chromium). Firefox can't run on the
+  # owner's Mac (Playwright 1.49's Firefox fails on macOS 27), so CI is where Firefox gets tested.
+  browsers:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: { browser: [firefox, webkit] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+      - run: npx vitest run --browser.name=${{ matrix.browser }}
+        working-directory: packages/ui

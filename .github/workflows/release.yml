@@ -1,0 +1,27 @@
+name: Publish to npm
+# Push a tag like v0.6.0 (matching every package.json version) to publish.
+# Two ways to authenticate, whichever is set up:
+#  - npm trusted publishing (preferred, no secret): on npmjs.com, each @commmerce package > Settings > Trusted publisher >
+#    GitHub Actions, repository NirmalND/commmerce-ui, workflow release.yml. Needs the id-token permission below.
+#  - the repository secret NPM_TOKEN: a granular token for the npm user "commmerce" (owner of the @commmerce scope),
+#    read and write on @commmerce. npm restricts 2FA-bypassing tokens for direct publishing from January 2027, so this
+#    is for the first publish only; switch to trusted publishing after it.
+on:
+  push: { tags: ['v*'] }
+permissions:
+  contents: read
+  id-token: write  # lets npm trusted publishing verify this workflow (OIDC)
+jobs:
+  publish:
+    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, registry-url: 'https://registry.npmjs.org' }
+      - run: npm install -g npm@11.6.0  # trusted publishing needs npm 11.5.1 or later
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Tag matches package versions
+        run: test "v$(node -p "require('./packages/ui/package.json').version")" = "${GITHUB_REF_NAME}"
+      - run: node scripts/publish.mjs --yes
+        env: { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }
