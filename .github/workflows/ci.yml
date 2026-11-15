@@ -1,0 +1,121 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build
+      - run: npm test
+      - run: node scripts/build-docs.mjs
+      - run: node scripts/test-packages.mjs chromium,webkit
+
+  # The React wrapper suite again with React 19 (the main job runs it with React 18). React 19 is installed into
+  # packages/ui-react/react19 and swapped in by packages/ui-react/vitest.react19.config.ts.
+  react19:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run test:react19
+
+  # The component, React wrapper (React 18 and 19) and App Bridge suites in the other engines (the jobs above run
+  # them in Chromium). Firefox can't run on the owner's Mac (Playwright 1.49's Firefox fails on macOS 27), so CI is
+  # where Firefox gets tested.
+  browsers:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: { browser: [firefox, webkit] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+      - run: npx vitest run --browser.name=${{ matrix.browser }}
+        working-directory: packages/ui
+      - run: npx vitest run --browser.name=${{ matrix.browser }}
+        if: ${{ !cancelled() }}  # run every suite even if an earlier one failed
+        working-directory: packages/ui-react
+      - run: npm ci --prefix react19 --no-audit --no-fund && npx vitest run --config vitest.react19.config.ts --browser.name=${{ matrix.browser }}
+        if: ${{ !cancelled() }}  # run every suite even if an earlier one failed
+        working-directory: packages/ui-react
+      - run: npx vitest run --browser.name=${{ matrix.browser }}
+        if: ${{ !cancelled() }}  # run every suite even if an earlier one failed
+        working-directory: packages/app-bridge
+
+  # The React starter (examples/react-starter) against the PUBLISHED npm packages: it installs from the public
+  # registry (not the workspace), builds the app and checks it in Chromium. Not a root workspace, so root npm ci skips it.
+  react-starter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run: { working-directory: examples/react-starter }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: examples/react-starter/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+  # The Vue, Svelte, Angular and Next.js starters, the same way: each installs the PUBLISHED npm packages from its
+  # own package-lock.json, builds the app and runs the same browser tests in Chromium.
+  vue-starter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run: { working-directory: examples/vue-starter }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: examples/vue-starter/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+  svelte-starter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run: { working-directory: examples/svelte-starter }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: examples/svelte-starter/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+  angular-starter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run: { working-directory: examples/angular-starter }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: examples/angular-starter/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+  next-starter:
+    runs-on: ubuntu-24.04
+    defaults:
+      run: { working-directory: examples/next-starter }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: examples/next-starter/package-lock.json }
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test

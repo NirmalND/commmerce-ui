@@ -1,0 +1,21 @@
+# Commmerce UI Licence — DRAFT, NOT YET IN FORCE
+
+> Draft for legal review. Do not publish packages until this is approved.
+
+Copyright (c) 2026 Outdo Inc. (Commmerce). All rights reserved.
+
+1. **Grant.** You may install, use and include unmodified copies of the Commmerce UI packages
+   (`@commmerce/tokens`, `@commmerce/ui`, `@commmerce/ui-react`, `@commmerce/app-bridge`, and the `commmerce_ui` Flutter package) in
+   software whose purpose is to run on, integrate with or extend a Commmerce platform, including
+   apps listed in, or privately installed through, the Commmerce app marketplace.
+2. **Restrictions.** You may not use the packages, or the Commmerce name, logo or visual identity
+   they carry, to build a product that is not for use with a Commmerce platform, or one that
+   presents itself as made or endorsed by Commmerce. You may not redistribute the packages on their
+   own or as a competing design system.
+3. **No warranty.** The packages are provided "as is", without warranty of any kind. Commmerce is
+   not liable for any claim or damages arising from their use.
+4. **Termination.** This licence ends automatically if you breach it.
+
+
+---
+The bundled Poppins font files (fonts/) are licensed separately under the SIL Open Font License 1.1: see fonts/OFL.txt.
