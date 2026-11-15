@@ -1,0 +1,6 @@
+{
+  "name": "@commmerce/brand",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Commmerce logos for Commmerce's own products. Not published: third-party apps must not use Commmerce branding."
+}
