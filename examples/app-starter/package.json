@@ -1,0 +1,13 @@
+{
+  "name": "commmerce-app-starter",
+  "private": true,
+  "type": "module",
+  "description": "A Commmerce admin app: plain HTML with Commmerce UI and App Bridge, and a zero-dependency Node backend.",
+  "scripts": {
+    "vendor": "node fetch-vendor.mjs",
+    "dev": "node server.mjs --dev",
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,86 @@
+import { LitElement, html, css, nothing } from 'lit';
+import { base, define } from '../base.js';
+
+/**
+ * White section card with optional title, description and header actions.
+ *
+ * On narrow cards the header wraps instead of squeezing the heading: the title adornment moves under the heading
+ * when both don't fit on one line, and the actions move under the title when the title would be narrower than
+ * about 12 characters. Wide cards keep everything on one row.
+ * @element cm-card
+ * @slot - Body.
+ * @slot actions - Header actions (buttons, links), right-aligned.
+ * @slot title-adornment - Badge or icon next to the title.
+ */
+export class CmCard extends LitElement {
+  static properties = {
+    heading: {},
+    description: {},
+    flush: { type: Boolean, reflect: true },
+    headingLevel: { type: Number, attribute: 'heading-level' },
+  };
+
+  /** Card title, rendered as a heading at `heading-level`. */
+  heading = '';
+  /** One sentence under the title in text-tertiary. */
+  description = '';
+  /** Removes body padding, for lists and tables that run edge to edge. */
+  flush = false;
+  /** Heading level for the title, so pages keep a correct outline. Default 2. */
+  headingLevel: 2 | 3 | 4 | 5 | 6 = 2;
+
+  #adorned = false;
+
+  static styles = [
+    base,
+    css`
+      :host { display: block; }
+      section {
+        background: var(--cm-bg-surface); border: var(--cm-border-1) solid var(--cm-border-card);
+        border-radius: var(--cm-radius-md); padding: var(--cm-space-20);
+      }
+      :host([flush]) section { padding: 0; }
+      /* Wraps only on narrow cards. .main grows from a 0 basis (wide cards look exactly as before: its content stays
+         at the start), and its minimum width comes from .strut: the heading on one line, capped at 12 characters. So
+         the actions move under the title only when the heading would get less than that. */
+      header {
+        display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between;
+        gap: var(--cm-space-10) var(--cm-space-20); margin-bottom: var(--cm-space-20);
+      }
+      :host([flush]) header { padding: var(--cm-space-20) var(--cm-space-20) 0; }
+      .main { flex: 1 1 0%; max-inline-size: 100%; }
+      .strut {
+        display: block; block-size: 0; overflow: hidden; visibility: hidden; white-space: nowrap;
+        max-inline-size: 12ch; font-size: var(--cm-type-heading-sm-size); font-weight: 600;
+      }
+      .title { margin: 0; font-size: var(--cm-type-heading-sm-size); font-weight: 600; display: flex; flex-wrap: wrap; align-items: center; gap: var(--cm-space-10); }
+      /* Flex-wrap moves the badges under the heading before the heading itself would wrap. */
+      .adornment { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cm-space-10); }
+      .adornment[hidden] { display: none; }
+      .desc { margin: 6px 0 0; font-size: 16px; color: var(--cm-text-tertiary); }
+      .actions { display: flex; flex-wrap: wrap; gap: var(--cm-space-20); align-items: center; }
+    `,
+  ];
+
+  #onAdornment(e: Event) {
+    const adorned = (e.target as HTMLSlotElement).assignedNodes().some((n) => n.nodeType === Node.ELEMENT_NODE || n.textContent?.trim());
+    if (adorned !== this.#adorned) { this.#adorned = adorned; this.requestUpdate(); }
+  }
+
+  render() {
+    const level = Math.min(6, Math.max(2, this.headingLevel || 2));
+    const title = this.heading
+      ? html`<div role="heading" aria-level=${level} class="title" part="title"><span class="text">${this.heading}</span><span class="adornment" ?hidden=${!this.#adorned}><slot name="title-adornment" @slotchange=${this.#onAdornment}></slot></span></div>`
+      : nothing;
+    return html`<section part="card" aria-label=${this.heading || nothing}>
+      ${this.heading || this.description
+        ? html`<header><div class="main">${this.heading ? html`<span class="strut" aria-hidden="true">${this.heading}</span>` : nothing}${title}${this.description ? html`<p class="desc">${this.description}</p>` : nothing}</div>
+            <div class="actions"><slot name="actions"></slot></div></header>`
+        : nothing}
+      <slot></slot>
+    </section>`;
+  }
+}
+define('cm-card', CmCard);
+
+declare global { interface HTMLElementTagNameMap { 'cm-card': CmCard } }
