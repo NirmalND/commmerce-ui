@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>App Bridge test admin</title>
+<script type="module">
+  // A stand-in admin on its own origin (e.g. http://admin.localhost:<port>), so tests can check admin origin
+  // patterns from inside the app: the test page itself is on 127.0.0.1, which a pattern never matches.
+  // ?app=<app page URL>&appOrigin=<its origin>[&referrerpolicy=...]. Forwards the app's report to the test page.
+  import { createHost, signSessionToken } from '../../src/index.ts';
+  const q = new URLSearchParams(location.search);
+  const f = document.createElement('iframe');
+  if (q.get('referrerpolicy')) f.referrerPolicy = q.get('referrerpolicy');
+  const toasts = [];
+  const host = createHost({ iframe: f, appOrigin: q.get('appOrigin'), handlers: {
+    toast: ({ message }) => { toasts.push(message); },
+    sessionToken: () => signSessionToken({ iss: location.origin, dest: 'https://shop.example', aud: 'k', sub: '1', sid: 's' }, 'x'),
+  } });
+  addEventListener('message', (e) => {
+    if (e.source === f.contentWindow && e.data?.testReport) {
+      parent.postMessage({ testReport: { ...e.data.testReport, admin: location.origin, connected: host.connected, toasts } }, '*');
+    }
+  });
+  f.src = q.get('app');
+  document.body.append(f);
+</script>
