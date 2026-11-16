@@ -1,0 +1,20 @@
+/* Page background and type come from the tokens. Everything else is a Commmerce UI component. */
+body {
+  margin: 0;
+  background: var(--cm-bg-page);
+  color: var(--cm-text-default);
+  font-family: var(--cm-font-sans);
+}
+
+/* One order row: the columns line up across rows. */
+.order-row {
+  display: grid;
+  grid-template-columns: 0.6fr 1.2fr 1.6fr 0.9fr 0.8fr;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Phones: two columns instead of squeezing every field into one line. */
+@media (max-width: 600px) {
+  .order-row { grid-template-columns: 1fr 1fr; }
+}
