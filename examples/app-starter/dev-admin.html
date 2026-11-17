@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-cm-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Dev admin: your app inside a stand-in for the Commmerce admin</title>
+  <link rel="stylesheet" href="/vendor/fonts.css">
+  <link rel="stylesheet" href="/vendor/tokens.css">
+  <script type="module" src="/vendor/cdn.js"></script>
+  <style>
+    body { margin: 0; background: var(--cm-bg-page); font-family: var(--cm-font-sans); color: var(--cm-text-default); }
+    header { display: flex; align-items: center; gap: var(--cm-space-20); padding: var(--cm-space-10) var(--cm-space-20); background: var(--cm-bg-surface); border-bottom: var(--cm-border-1) solid var(--cm-border-default); }
+    header p { margin: 0; font-size: 14px; color: var(--cm-text-tertiary); }
+    iframe { display: block; width: 100%; border: 0; min-height: 200px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Dev admin</strong>
+    <p>A stand-in for the Commmerce admin, for local development only. It runs App Bridge's reference host.</p>
+    <cm-toggle id="theme" label="Dark theme"></cm-toggle>
+  </header>
+  <iframe id="app" title="Your app"></iframe>
+  <script type="module">
+    import { createReferenceHost } from '/vendor/app-bridge.js';
+    const { apiKey, appOrigin } = await (await fetch('/dev/config')).json();
+    const iframe = document.getElementById('app');
+    iframe.src = `${appOrigin}/`;
+    const host = createReferenceHost({
+      iframe, appOrigin, apiKey,
+      navigate: (path, replace) => history[replace ? 'replaceState' : 'pushState'](null, '', `#${path}`),
+      resources: () => [
+        { id: 'gid://product/1', title: 'Cotton kurta, blue' },
+        { id: 'gid://product/2', title: 'Linen shirt, white' },
+        { id: 'gid://product/3', title: 'Silk saree, maroon' },
+      ],
+      // The real admin's backend signs tokens with your app secret; here this dev server does it.
+      sessionToken: async () => (await (await fetch('/dev/token', { method: 'POST' })).json()).token,
+    });
+    document.getElementById('theme').addEventListener('change', (e) => {
+      const theme = e.target.checked ? 'dark' : 'light';
+      document.documentElement.dataset.cmTheme = theme;
+      host.send('theme.change', { theme });
+    });
+  </script>
+</body>
+</html>
