@@ -1,0 +1,23 @@
+name: Publish to npm
+# Push a tag like v0.6.0 (matching every package.json version) to publish.
+# Authenticates with npm trusted publishing (OIDC), no token: each @commmerce package on npmjs.com has a trusted
+# publisher (GitHub Actions, NirmalND/commmerce-ui, release.yml, "Allow npm publish") and refuses 2FA-bypass tokens.
+# A new package must be published once by hand (npm login as "commmerce") before its trusted publisher can be added.
+on:
+  push: { tags: ['v*'] }
+permissions:
+  contents: read
+  id-token: write  # lets npm trusted publishing verify this workflow (OIDC)
+jobs:
+  publish:
+    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, registry-url: 'https://registry.npmjs.org' }
+      - run: npm install -g npm@11.6.0  # trusted publishing needs npm 11.5.1 or later
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Tag matches package versions
+        run: test "v$(node -p "require('./packages/ui/package.json').version")" = "${GITHUB_REF_NAME}"
+      - run: node scripts/publish.mjs --yes  # authenticates with npm trusted publishing (OIDC); no token
