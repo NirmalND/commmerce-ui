@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" data-cm-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Product reviews</title>
+  <link rel="stylesheet" href="/vendor/fonts.css">
+  <link rel="stylesheet" href="/vendor/tokens.css">
+  <script type="module" src="/vendor/cdn.js"></script>
+  <style>body { margin: 0; background: var(--cm-bg-page); font-family: var(--cm-font-sans); color: var(--cm-text-default); }</style>
+</head>
+<body>
+  <!-- An app page: no header or side navigation of its own; the admin draws those around it. -->
+  <cm-page narrow>
+    <cm-page-header slot="header" heading="Product reviews"></cm-page-header>
+    <cm-stack>
+    <cm-banner id="who" tone="information" heading="Connecting to the admin…"></cm-banner>
+    <cm-card heading="Auto-reply">
+      <form id="settings"><cm-stack>
+        <cm-text-field name="reply" label="Reply to new 5-star reviews" multiline rows="3" value="Thank you for your review!"></cm-text-field>
+        <cm-checkbox name="enabled" label="Send the reply automatically" checked></cm-checkbox>
+      </cm-stack></form>
+    </cm-card>
+    <cm-card heading="Try App Bridge">
+      <cm-stack direction="inline" gap="10" wrap>
+        <cm-button id="toast">Show a toast</cm-button>
+        <cm-button id="confirm">Delete all reviews…</cm-button>
+        <cm-button id="pick">Pick products</cm-button>
+      </cm-stack>
+    </cm-card>
+    </cm-stack>
+  </cm-page>
+
+  <script type="module">
+    import { createApp } from '/vendor/app-bridge.js';
+
+    // The server fills these in from its settings (COMMMERCE_ADMIN_ORIGIN, COMMMERCE_API_KEY).
+    const app = createApp({ hostOrigin: %ADMIN_ORIGIN%, apiKey: %API_KEY% });
+
+    const { theme } = await app.ready;
+    document.documentElement.dataset.cmTheme = theme;
+    app.on('theme.change', ({ theme }) => (document.documentElement.dataset.cmTheme = theme));
+    app.autoResize(); // the admin sizes this frame to the page
+
+    // Call your backend with a session token; it verifies it and finds the store.
+    async function api(path, init = {}) {
+      const token = await app.getSessionToken();
+      const res = await fetch(path, { ...init, headers: { ...init.headers, Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error(`${path}: ${res.status}`);
+      return res.json();
+    }
+    const who = document.getElementById('who');
+    try {
+      const me = await api('/api/me');
+      who.tone = 'success';
+      who.heading = `Connected to ${me.storeName}`;
+      who.textContent = `Signed in as staff member ${me.staff}. Your backend verified the session token.`;
+    } catch (e) {
+      who.tone = 'critical';
+      who.heading = 'Could not reach the app backend';
+      who.textContent = e.message;
+    }
+
+    // Unsaved changes: the admin's save bar.
+    const form = document.getElementById('settings');
+    const saved = new FormData(form);
+    form.addEventListener('input', () => app.saveBar.show({ message: 'Unsaved auto-reply' }));
+    form.addEventListener('change', () => app.saveBar.show({ message: 'Unsaved auto-reply' }));
+    app.on('saveBar.save', async () => {
+      await app.saveBar.show({ message: 'Saving…', loading: true });
+      await new Promise((r) => setTimeout(r, 600)); // await api('/api/settings', { method: 'PUT', body: … })
+      await app.saveBar.hide();
+      await app.toast.show('Auto-reply saved', { tone: 'success' });
+    });
+    app.on('saveBar.discard', async () => {
+      form.querySelector('[name=reply]').value = saved.get('reply');
+      form.querySelector('[name=enabled]').checked = saved.has('enabled');
+      await app.saveBar.hide();
+    });
+
+    document.getElementById('toast').addEventListener('click', () => app.toast.show('Hello from the app'));
+    document.getElementById('confirm').addEventListener('click', async () => {
+      const choice = await app.modal.open({
+        title: 'Delete all reviews?', message: 'This can\'t be undone.',
+        primaryAction: { label: 'Delete reviews', destructive: true }, secondaryAction: { label: 'Cancel' },
+      });
+      if (choice === 'primary') await app.toast.show('Reviews deleted');
+    });
+    document.getElementById('pick').addEventListener('click', async () => {
+      const picked = await app.resourcePicker({ type: 'product', multiple: true });
+      if (picked?.length) await app.toast.show(`${picked.length} product${picked.length === 1 ? '' : 's'} picked`);
+    });
+  </script>
+</body>
+</html>
