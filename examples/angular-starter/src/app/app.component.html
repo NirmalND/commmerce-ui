@@ -1,0 +1,29 @@
+<cm-page>
+  <cm-page-header slot="header" heading="Orders">
+    <cm-button slot="actions" variant="primary" (click)="openModal()">New order</cm-button>
+  </cm-page-header>
+  <cm-stack gap="20">
+    <!-- [prop] binds DOM properties, so arrays reach `columns` and `rows` as arrays. -->
+    <cm-data-table caption="Orders" caption-hidden [columns]="columns" [rows]="orders()"></cm-data-table>
+    @if (submitted()) { <p data-testid="submitted">Submitted: {{ submitted() }}</p> }
+  </cm-stack>
+
+  <!-- `open` follows state. Esc, the backdrop and the close button fire cm-close: put the state back. -->
+  <cm-modal heading="New order" [open]="modalOpen()" (cm-close)="modalOpen.set(false)">
+    <!-- ngNoForm: keep a plain <form>. Without it FormsModule adds `novalidate` and `required` stops blocking submit. -->
+    <form id="new-order" ngNoForm (submit)="submit($event)">
+      <cm-stack gap="20">
+        <!-- ngModel works on cm-text-field and cm-select with ngDefaultControl (it listens to `input`, sets `value`). -->
+        <cm-text-field label="Customer" name="customer" required ngDefaultControl [(ngModel)]="customer"></cm-text-field>
+        <!-- Or bind the property and listen to the event yourself: -->
+        <cm-select label="Status" name="status" [options]="statuses" [value]="status()" (change)="onStatus($event)"></cm-select>
+        <cm-checkbox label="Paid" name="paid" value="yes" [checked]="paid()" (change)="onPaid($event)"></cm-checkbox>
+        <p data-testid="draft">Draft: {{ customer() || '(no customer)' }} · {{ status() }} · {{ paid() ? 'paid' : 'unpaid' }}</p>
+      </cm-stack>
+    </form>
+    <cm-button slot="footer" (click)="clear()">Clear</cm-button>
+    <cm-button slot="footer" (click)="modalOpen.set(false)">Cancel</cm-button>
+    <!-- form="new-order": the footer is outside the <form>, so point the submit button at it. -->
+    <cm-button slot="footer" variant="primary" type="submit" form="new-order">Create order</cm-button>
+  </cm-modal>
+</cm-page>
