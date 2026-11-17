@@ -1,0 +1,57 @@
+{
+  "name": "@commmerce/ui-react",
+  "version": "1.9.0",
+  "description": "React components for Commmerce UI, generated from the web components.",
+  "keywords": [
+    "react",
+    "web-components",
+    "commmerce",
+    "design-system",
+    "ui"
+  ],
+  "author": "Commmerce",
+  "homepage": "https://commmerce.com/commmerceui/",
+  "bugs": {
+    "email": "support@commmerce.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "THIRD_PARTY_NOTICES.txt",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:react19": "npm ci --prefix react19 --no-audit --no-fund && vitest run --config vitest.react19.config.ts"
+  },
+  "dependencies": {
+    "@commmerce/ui": "1.9.0",
+    "@lit/react": "1.0.6"
+  },
+  "peerDependencies": {
+    "react": ">=17"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitest/browser": "^2.1.8",
+    "playwright": "^1.49.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "vitest": "^2.1.8"
+  }
+}
