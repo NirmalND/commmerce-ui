@@ -1,0 +1,39 @@
+{
+  "name": "@commmerce/icons",
+  "version": "1.8.1",
+  "description": "Commmerce UI line icons (24px grid, 1.6px stroke) as SVG files and path data.",
+  "keywords": [
+    "icons",
+    "svg",
+    "commmerce",
+    "design-system"
+  ],
+  "author": "Commmerce",
+  "homepage": "https://commmerce.com/commmerceui/",
+  "bugs": {
+    "email": "support@commmerce.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./svg/*": "./dist/svg/*"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  }
+}

@@ -1,0 +1,136 @@
+name: CI
+# Fast-CI rules (owner, 17 Nov 2026): lint, typecheck, build and tests run as parallel jobs; test shards are split by
+# recorded test time (scripts/test-shard.mjs, scripts/test-times.json); pull requests run only the tests their change
+# can reach (scripts/ci-plan.mjs), while lockfiles, configs, CI files, scripts and the generated packages force a full
+# run; pushes to main (and so every release) always run everything.
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      tests: ${{ steps.plan.outputs.tests }}
+      any_tests: ${{ steps.plan.outputs.any_tests }}
+      starters: ${{ steps.plan.outputs.starters }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }  # the diff against the pull request's base
+      - id: plan
+        run: node scripts/ci-plan.mjs
+
+  # oxlint with warnings as errors (config in .oxlintrc.json), plus the scale check. Needs no install or build.
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm run lint
+      - run: node scripts/check-scale.mjs
+
+  typecheck:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck
+
+  # The full build, the docs build and the packed packages (npm pack, installed into a fresh app, checked in
+  # Chromium and WebKit).
+  build:
+    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-webkit-${{ hashFiles('package-lock.json') }}
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium webkit
+      - if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium webkit
+      - run: npm run build
+      - run: node scripts/build-docs.mjs
+      - run: node scripts/test-packages.mjs chromium,webkit
+
+  # The component, React wrapper (React 18 and 19) and App Bridge suites in Chromium, Firefox and WebKit, two shards
+  # per browser. Firefox can't run on the owner's Mac (Playwright 1.49's Firefox fails on macOS 27), so CI is where
+  # Firefox gets tested.
+  test:
+    needs: plan
+    if: needs.plan.outputs.any_tests == 'true'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+        shard: [1, 2]
+    name: test (${{ matrix.browser }}, ${{ matrix.shard }}/2)
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }  # vitest --changed compares with the pull request's base
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps ${{ matrix.browser }}
+      - run: npm run build
+      - run: node scripts/test-shard.mjs ${{ matrix.browser }} ${{ matrix.shard }} 2
+        env:
+          CI_TESTS: ${{ needs.plan.outputs.tests }}
+          CI_BASE: ${{ github.base_ref && format('origin/{0}', github.base_ref) || '' }}
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.browser }}-${{ matrix.shard }}
+          path: test-reports/
+          retention-days: 14
+
+  # The starters against the PUBLISHED npm packages: each installs from the public registry with its own
+  # package-lock.json (not the workspace), builds the app and checks it in Chromium. On pull requests only the
+  # starters whose folder changed run.
+  starter:
+    needs: plan
+    if: needs.plan.outputs.starters != '[]'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        starter: ${{ fromJSON(needs.plan.outputs.starters) }}
+    name: ${{ matrix.starter }}
+    defaults:
+      run: { working-directory: 'examples/${{ matrix.starter }}' }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: 'examples/${{ matrix.starter }}/package-lock.json' }
+      - run: npm ci --no-audit --no-fund
+      - id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ matrix.starter }}-${{ hashFiles(format('examples/{0}/package-lock.json', matrix.starter)) }}
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - run: npm test

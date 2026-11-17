@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-cm-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commmerce UI playground</title>
+  <!-- In a real app: https://unpkg.com/@commmerce/tokens@0.1.0/dist/tokens.css and .../@commmerce/ui@0.1.0/dist/cdn.js -->
+  <link rel="stylesheet" href="../packages/tokens/dist/tokens.css" />
+  <script type="module" src="../packages/ui/dist/cdn.js"></script>
+  <style>
+    body { margin: 0; background: var(--cm-bg-page); font-family: var(--cm-font-sans); color: var(--cm-text-default); }
+    main { max-width: 960px; margin: 0 auto; padding: var(--cm-space-30) 16px; display: grid; gap: var(--cm-space-20); }
+    .crumb { margin: 0; font-size: 14px; color: var(--cm-text-tertiary); }
+    h1 { margin: 0; font-size: var(--cm-type-heading-lg-size); font-weight: 600; }
+    .row { display: flex; flex-wrap: wrap; gap: var(--cm-space-20); align-items: center; }
+    .stack { display: grid; gap: var(--cm-space-30); }
+    .grid { display: grid; gap: var(--cm-space-20); grid-template-columns: 1fr 380px; align-items: start; }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    output { font-size: 12px; color: var(--cm-text-tertiary); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="crumb">Dashboard / Products / Add Product</p>
+        <h1>Add Product</h1>
+      </div>
+      <div class="row" style="gap:var(--cm-space-10)">
+        <cm-button id="theme" size="medium"><cm-icon slot="icon" name="settings" size="16"></cm-icon>Dark theme</cm-button>
+        <cm-button size="medium" href="#"><cm-icon slot="icon" name="external" size="16"></cm-icon>Preview</cm-button>
+      </div>
+    </div>
+
+    <cm-banner tone="attention" heading="Your store is in test mode" dismissible>
+      Orders placed now won't be charged.
+      <cm-button slot="actions" size="slim" variant="primary">Go live</cm-button>
+    </cm-banner>
+
+    <div class="grid">
+      <form id="product" class="stack" novalidate>
+        <cm-card heading="Details" description="What customers see on the product page.">
+          <cm-button slot="actions" size="slim">Duplicate</cm-button>
+          <div class="stack">
+            <cm-text-field name="title" label="Title" placeholder="Short sleeve t-shirt" required></cm-text-field>
+            <cm-text-field name="points" label="Ordered" hint="points earned per rupee (rs. 1) spent" type="number" value="1"></cm-text-field>
+            <cm-text-field name="description" label="Description" multiline rows="4" help-text="Plain text, up to 500 characters"></cm-text-field>
+            <cm-text-field name="sku" label="SKU" value="TS-0042" error="This SKU is already used by another product"></cm-text-field>
+            <cm-checkbox name="track" value="yes" label="Track quantity" description="Stock goes down as orders come in" checked></cm-checkbox>
+            <cm-checkbox name="cod" label="Allow cash on delivery" disabled></cm-checkbox>
+          </div>
+        </cm-card>
+        <div class="row" style="justify-content:flex-end">
+          <cm-button type="reset" size="large">Cancel</cm-button>
+          <cm-button type="submit" variant="primary" size="large">Save</cm-button>
+        </div>
+        <output id="out"></output>
+      </form>
+
+      <div class="stack" style="gap:var(--cm-space-20)">
+      <cm-card heading="Icons" description="@commmerce/icons, 34 line icons">
+        <div id="icons" class="row" style="gap:var(--cm-space-15);color:var(--cm-icon-default)"></div>
+      </cm-card>
+      <cm-card heading="Order #1042">
+        <cm-badge slot="title-adornment" tone="success">Accepted</cm-badge>
+        <div class="row">
+          <cm-badge tone="information">Order placed</cm-badge>
+          <cm-badge tone="critical">Cancelled</cm-badge>
+          <cm-badge tone="attention">New</cm-badge>
+          <cm-badge>Draft</cm-badge>
+        </div>
+      </cm-card>
+      </div>
+    </div>
+
+    <cm-banner tone="critical" heading="Payment failed">The card was declined. Ask the customer for another payment method.</cm-banner>
+    <cm-banner tone="success">Product saved.</cm-banner>
+    <cm-banner tone="information">GST rates changed on 1 Nov. Check your tax settings.</cm-banner>
+  </main>
+  <script type="module">
+    import { iconNames } from '../packages/icons/dist/index.js';
+    document.getElementById('icons').innerHTML = iconNames.map((n) => `<cm-icon name="${n}" label="${n}" title="${n}"></cm-icon>`).join('');
+    const root = document.documentElement, tb = document.getElementById('theme');
+    const setTheme = (t) => { root.dataset.cmTheme = t; tb.lastChild.textContent = t === 'dark' ? 'Light theme' : 'Dark theme'; };
+    tb.addEventListener('click', () => setTheme(root.dataset.cmTheme === 'dark' ? 'light' : 'dark'));
+    if (new URLSearchParams(location.search).get('theme') === 'dark') setTheme('dark');
+    const form = document.getElementById('product');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { document.getElementById('out').textContent = 'Fix the highlighted fields.'; return; }
+      document.getElementById('out').textContent = JSON.stringify(Object.fromEntries(new FormData(form)));
+    });
+  </script>
+</body>
+</html>

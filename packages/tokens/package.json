@@ -1,0 +1,45 @@
+{
+  "name": "@commmerce/tokens",
+  "version": "1.8.1",
+  "description": "Design tokens for Commmerce UI: colours, type, spacing, radii and shadows as CSS variables, JSON and JS, in light and dark.",
+  "keywords": [
+    "design-tokens",
+    "css-variables",
+    "commmerce",
+    "design-system"
+  ],
+  "author": "Commmerce",
+  "homepage": "https://commmerce.com/commmerceui/",
+  "bugs": {
+    "email": "support@commmerce.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "main": "./dist/tokens.js",
+  "types": "./dist/tokens.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/tokens.d.ts",
+      "default": "./dist/tokens.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./fonts.css": "./dist/fonts.css",
+    "./fonts/*": "./dist/fonts/*",
+    "./tokens.json": "./dist/tokens.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md",
+    "THIRD_PARTY_NOTICES.txt"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/contrast.mjs && node scripts/build.mjs"
+  }
+}
