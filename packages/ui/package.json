@@ -1,0 +1,62 @@
+{
+  "name": "@commmerce/ui",
+  "version": "1.9.2",
+  "description": "Commmerce UI web components: build apps that feel native to the Commmerce admin. Works in plain HTML, React, Vue and server-rendered pages.",
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "lit",
+    "commmerce",
+    "design-system",
+    "ui"
+  ],
+  "author": "Commmerce",
+  "homepage": "https://commmerce.com/commmerceui/",
+  "bugs": {
+    "email": "support@commmerce.com"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cdn.js": "./dist/cdn.js",
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "default": "./dist/components/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "THIRD_PARTY_NOTICES.txt",
+    "README.md"
+  ],
+  "sideEffects": [
+    "./dist/components/*.js",
+    "./dist/index.js",
+    "./dist/cdn.js"
+  ],
+  "customElements": "dist/custom-elements.json",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && esbuild src/index.ts --bundle --minify --format=esm --target=es2021 --outfile=dist/cdn.js && cem analyze --litelement --globs \"src/components/*.ts\" \"src/localize.ts\" \"src/overlay.ts\" --outdir dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@commmerce/icons": "1.9.2",
+    "@commmerce/tokens": "1.9.2",
+    "lit": "3.2.1"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.10.3",
+    "@vitest/browser": "^2.1.8",
+    "playwright": "^1.49.0"
+  }
+}

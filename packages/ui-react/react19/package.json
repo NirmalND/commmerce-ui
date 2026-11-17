@@ -1,0 +1,9 @@
+{
+  "name": "ui-react-react19-test-deps",
+  "private": true,
+  "description": "React 19 for the second run of the wrapper tests (vitest.react19.config.ts). Not a workspace: installed with `npm run test:react19`.",
+  "dependencies": {
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  }
+}
