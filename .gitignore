@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+docs/vendor/
+docs/dev.html
+__screenshots__/
+flutter/**/.dart_tool/
+flutter/**/build/
+flutter/**/.flutter-plugins*
+flutter/**/pubspec.lock
+test-reports/
