@@ -1,0 +1,1201 @@
+{
+ "name": "Commmerce",
+ "version": 2,
+ "meta": {
+  "source": "figma",
+  "file": "https://www.figma.com/design/Mlnc5I8JGVdqZ8ZNHLhVqy/Commmerce-Design-System-2024",
+  "frames": [
+   "https://www.figma.com/design/Mlnc5I8JGVdqZ8ZNHLhVqy/Commmerce-Design-System-2024?node-id=725-2553",
+   "https://www.figma.com/design/Mlnc5I8JGVdqZ8ZNHLhVqy/Commmerce-Design-System-2024?node-id=534-997",
+   "https://www.figma.com/design/Mlnc5I8JGVdqZ8ZNHLhVqy/Commmerce-Design-System-2024?node-id=541-2337",
+   "https://www.figma.com/design/Mlnc5I8JGVdqZ8ZNHLhVqy/Commmerce-Design-System-2024?node-id=543-2503"
+  ],
+  "components": {
+   "Button": "922:7979",
+   "TextField": "916:7880",
+   "Checkbox": "219:822",
+   "HeaderBar": "916:7823",
+   "FlashOfferBar": "118:1229",
+   "SideNav": "118:928",
+   "BottomNav": "119:416",
+   "Radio": "127:525",
+   "SaveBar": "103:667",
+   "InfoPanel": "916:7827",
+   "Card": "916:7844",
+   "ResourceList": "691:2969",
+   "SmartTip": "559:385",
+   "NestedList": "362:2930",
+   "MobileMenu": "622:2277",
+   "SearchBar": "285:1416",
+   "Pagination": "1009:290",
+   "FilterPanel": "882:1048",
+   "SidePanel": "425:4164",
+   "OptionGroup": "661:2368",
+   "ReportTile": "419:2880",
+   "AppCard": "359:2065",
+   "Menu": "339:2998",
+   "NotificationPanel": "414:1455",
+   "Select": "355:1511",
+   "TableHeader": "328:2856",
+   "ActionBar": "253:3372",
+   "Modal": "433:1497",
+   "StatusTabs": "246:3006",
+   "BottomSheet": "611:2686",
+   "EmptyState": "576:4776",
+   "Comment": "569:4354",
+   "Skeleton": "680:278",
+   "SkeletonDisplay": "680:731"
+  },
+  "synced": "2026-11-13",
+  "decisions": "2026-11-13: AA contrast fixes, dark theme, border-input, action-* and tracking-caps added from the Figma palette; see README Accessibility.",
+  "scale": "2026-11-16 (1.5.0): standard scale decided by judgement (owner: the Figma sizes were a designer mistake): 4px spacing grid, type scale 12-30, control heights 32/36/40 (44 on touch), radius 6/8/12, icon sizes 16/20/24, shadows only on overlays, motion tokens. 2026-11-17 (1.6, owner standard, issue #33): buttons 36 (40 on touch), fields 40 (44 on touch), labels 13/500, supporting text 12/16, section heading 18/26."
+ },
+ "color": {
+  "themes": [
+   {
+    "id": "light",
+    "name": "Light"
+   },
+   {
+    "id": "dark",
+    "name": "Dark"
+   }
+  ],
+  "tokens": [
+   {
+    "name": "bg-page",
+    "value": {
+     "light": "#f6f6f6",
+     "dark": "#111111"
+    },
+    "usage": "Page background behind cards. Text: text-default, text-tertiary."
+   },
+   {
+    "name": "bg-surface",
+    "value": {
+     "light": "#ffffff",
+     "dark": "#1b1b1b"
+    },
+    "usage": "Cards, header bar, save bar, inputs (Figma: Header Bg). Dark: Figma panel-header #1B1B1B."
+   },
+   {
+    "name": "bg-flash-bar",
+    "value": {
+     "light": "#2e2a2a",
+     "dark": "#2e2a2a"
+    },
+    "usage": "Flash offer bar. Text on it: text-on-dark (14:1)."
+   },
+   {
+    "name": "bg-dashboard",
+    "value": {
+     "light": "#000000",
+     "dark": "#000000"
+    },
+    "usage": "Dashboard / side navigation background. Text on it: text-on-dark."
+   },
+   {
+    "name": "bg-attention",
+    "value": {
+     "light": "#e5f2ff",
+     "dark": "#132a40"
+    },
+    "usage": "Attention banners and callouts (light blue). Pair with text-attention."
+   },
+   {
+    "name": "bg-information",
+    "value": {
+     "light": "#f1a953",
+     "dark": "#3a2a14"
+    },
+    "usage": "Informational banners (Figma orange, unchanged). Text on it: text-default only (10.5:1). Dark: tinted fill, text-default."
+   },
+   {
+    "name": "bg-success",
+    "value": {
+     "light": "#81bb47",
+     "dark": "#1f2e12"
+    },
+    "usage": "Success banners (Figma green, unchanged). Text on it: text-default only (9.1:1). Dark: tinted fill, text-default."
+   },
+   {
+    "name": "bg-critical",
+    "value": {
+     "light": "#fff0f0",
+     "dark": "#3a1414"
+    },
+    "usage": "Critical / error banners. Pair with text-critical."
+   },
+   {
+    "name": "bg-tag",
+    "value": {
+     "light": "#f1f3fa",
+     "dark": "#2a2d36"
+    },
+    "usage": "Tag and chip fills."
+   },
+   {
+    "name": "bg-icon",
+    "value": {
+     "light": "#f7f7f7",
+     "dark": "#2a2a2a"
+    },
+    "usage": "Fill behind icon buttons (the 48px rounded header icons)."
+   },
+   {
+    "name": "bg-hover",
+    "value": {
+     "light": "#f7f7f7",
+     "dark": "#2a2a2a"
+    },
+    "usage": "Label bars, row hover, secondary button fill. The file's swatch draws #F6F6F6 but labels it #F7F7F7; the label is used."
+   },
+   {
+    "name": "bg-error-bar",
+    "value": {
+     "light": "#fff2f2",
+     "dark": "#3a1414"
+    },
+    "usage": "Bottom error bar."
+   },
+   {
+    "name": "bg-offer-card",
+    "value": {
+     "light": "#eef5ff",
+     "dark": "#132a40"
+    },
+    "usage": "Offer area on application cards."
+   },
+   {
+    "name": "bg-inset",
+    "value": {
+     "light": "#f9f9fc",
+     "dark": "#1e1e1e"
+    },
+    "usage": "Inside-card panels and table bodies (Borders page: Inside Card Color)."
+   },
+   {
+    "name": "bg-input-filled",
+    "value": {
+     "light": "#f9f9f9",
+     "dark": "#232323"
+    },
+    "usage": "Filled or read-only input fill (Errors & Highlight page)."
+   },
+   {
+    "name": "icon-default",
+    "value": {
+     "light": "#8b8b8b",
+     "dark": "#8b8b8b"
+    },
+    "usage": "Default icon colour. gray-600 from the Figma black scale: 3.4:1 on white (Figma swatch #9E9E9E was 2.5:1, under the 3:1 needed for meaningful icons)."
+   },
+   {
+    "name": "icon-hover",
+    "value": {
+     "light": "#ffffff",
+     "dark": "#ffffff"
+    },
+    "usage": "Icon color on hover, over a dark fill."
+   },
+   {
+    "name": "icon-selected",
+    "value": {
+     "light": "#000000",
+     "dark": "#f4f4f4"
+    },
+    "usage": "Selected icon."
+   },
+   {
+    "name": "icon-responsive-menu",
+    "value": {
+     "light": "#696969",
+     "dark": "#9e9e9e"
+    },
+    "usage": "Icons in the responsive menu."
+   },
+   {
+    "name": "icon-success",
+    "value": {
+     "light": "#749e48",
+     "dark": "#81bb47"
+    },
+    "usage": "Success icons. Figma #8FBE5F darkened to 3.1:1 on white; dark uses Figma success green."
+   },
+   {
+    "name": "icon-critical",
+    "value": {
+     "light": "#ff0000",
+     "dark": "#ff3c2e"
+    },
+    "usage": "Caution and critical icons (4:1 on white)."
+   },
+   {
+    "name": "icon-rating",
+    "value": {
+     "light": "#ffc107",
+     "dark": "#ffc107"
+    },
+    "usage": "Rating stars."
+   },
+   {
+    "name": "text-default",
+    "value": {
+     "light": "#000000",
+     "dark": "#f4f4f4"
+    },
+    "usage": "Primary text on bg-surface and bg-page (19:1 light, 15.7:1 dark)."
+   },
+   {
+    "name": "text-secondary",
+    "value": {
+     "light": "#9e9e9e",
+     "dark": "#707070"
+    },
+    "usage": "Disabled text ONLY (WCAG exempts disabled controls). Never for placeholders or copy: use text-tertiary."
+   },
+   {
+    "name": "text-tertiary",
+    "value": {
+     "light": "#707070",
+     "dark": "#9e9e9e"
+    },
+    "usage": "Help text, hints, breadcrumbs, placeholders (4.6:1 on bg-page; 6.4:1 dark)."
+   },
+   {
+    "name": "text-information",
+    "value": {
+     "light": "#ad5500",
+     "dark": "#f1a953"
+    },
+    "usage": "Informational text. Figma #F18402 (2.3:1) darkened along its hue to 4.6:1 on its soft fill; dark uses Figma #F1A953."
+   },
+   {
+    "name": "text-critical",
+    "value": {
+     "light": "#de0000",
+     "dark": "#ff3c2e"
+    },
+    "usage": "Error messages. Figma #E50000 nudged to 4.6:1 on bg-critical."
+   },
+   {
+    "name": "text-success",
+    "value": {
+     "light": "#3c7c00",
+     "dark": "#81bb47"
+    },
+    "usage": "Success text. Figma #61AD14 (2.5:1) darkened to 4.7:1 on its soft fill; dark uses Figma #81BB47."
+   },
+   {
+    "name": "text-attention",
+    "value": {
+     "light": "#2e6faf",
+     "dark": "#5394d9"
+    },
+    "usage": "Attention text and links. Figma #3274B6 nudged to 4.6:1 on bg-attention."
+   },
+   {
+    "name": "text-on-dark",
+    "value": {
+     "light": "#ffffff",
+     "dark": "#ffffff"
+    },
+    "usage": "Text on bg-dashboard, bg-flash-bar and primary buttons (the file's Basic text)."
+   },
+   {
+    "name": "text-on-dark-secondary",
+    "value": {
+     "light": "#b5b5b5",
+     "dark": "#b5b5b5"
+    },
+    "usage": "Unselected items and secondary text on bg-dashboard and other dark grounds (side navigation). 10:1 on black, AA on nav-active."
+   },
+   {
+    "name": "text-speciality",
+    "value": {
+     "light": "#008800",
+     "dark": "#1ec81a"
+    },
+    "usage": "Speciality highlights on light grounds. Figma #1EC81A (2.3:1) darkened to 4.6:1. On the flash bar use text-speciality-on-dark."
+   },
+   {
+    "name": "text-counter",
+    "value": {
+     "light": "#3b68f9",
+     "dark": "#4b7cff"
+    },
+    "usage": "Counters and badges. Figma #3E6CFF nudged to 4.6:1."
+   },
+   {
+    "name": "border-default",
+    "value": {
+     "light": "#e5e5e5",
+     "dark": "#2e2e2e"
+    },
+    "usage": "Deprecated since 1.5: use border-subtle (same value).",
+    "deprecated": true
+   },
+   {
+    "name": "border-strong",
+    "value": {
+     "light": "#000000",
+     "dark": "#f4f4f4"
+    },
+    "usage": "Focused or highlighted input, secondary button, checkbox and radio outlines, focus rings."
+   },
+   {
+    "name": "border-input",
+    "value": {
+     "light": "#8b8b8b",
+     "dark": "#6f6f6f"
+    },
+    "usage": "Outline of text fields, selects and other form controls (3.4:1 on white, 3.4:1 dark). gray-600 from the Figma black scale. Since 1.5 the second border level: every form control outline (3:1 or more on surfaces)."
+   },
+   {
+    "name": "action-primary",
+    "value": {
+     "light": "#000000",
+     "dark": "#f4f4f4"
+    },
+    "usage": "Primary button fill. Black is the brand; inverts in dark."
+   },
+   {
+    "name": "action-primary-hover",
+    "value": {
+     "light": "#707070",
+     "dark": "#c9c9c9"
+    },
+    "usage": "Primary button hover (Figma gray-700 / gray-400). Text stays action-primary-text (4.9:1 / 12.7:1)."
+   },
+   {
+    "name": "action-primary-text",
+    "value": {
+     "light": "#ffffff",
+     "dark": "#000000"
+    },
+    "usage": "Label on action-primary."
+   },
+   {
+    "name": "action-disabled",
+    "value": {
+     "light": "#d6d6d6",
+     "dark": "#333333"
+    },
+    "usage": "Disabled button fill."
+   },
+   {
+    "name": "action-disabled-text",
+    "value": {
+     "light": "#707070",
+     "dark": "#8b8b8b"
+    },
+    "usage": "Disabled button label."
+   },
+   {
+    "name": "text-speciality-on-dark",
+    "value": {
+     "light": "#1ec81a",
+     "dark": "#1ec81a"
+    },
+    "usage": "Figma speciality green, for the flash offer bar and other dark grounds (6.3:1 on bg-flash-bar)."
+   },
+   {
+    "name": "border-critical",
+    "value": {
+     "light": "#ff0000",
+     "dark": "#ff3c2e"
+    },
+    "usage": "Input in error."
+   },
+   {
+    "name": "border-card",
+    "value": {
+     "light": "#e5e5e5",
+     "dark": "#2e2e2e"
+    },
+    "usage": "Deprecated since 1.5: use border-subtle (same value).",
+    "deprecated": true
+   },
+   {
+    "name": "gray-1000",
+    "value": {
+     "light": "#000000"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-700",
+    "value": {
+     "light": "#707070"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-600",
+    "value": {
+     "light": "#8b8b8b"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-500",
+    "value": {
+     "light": "#9e9e9e"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-400",
+    "value": {
+     "light": "#c9c9c9"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-300",
+    "value": {
+     "light": "#d6d6d6"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-100",
+    "value": {
+     "light": "#f4f4f4"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-50",
+    "value": {
+     "light": "#f6f6f6"
+    },
+    "usage": "Black scale step from the Typography & Colors board. Raw palette, not themed: prefer semantic tokens."
+   },
+   {
+    "name": "gray-900",
+    "value": {
+     "light": "#1e1e1e"
+    },
+    "usage": "Dark tour banner on the Smart Tips card."
+   },
+   {
+    "name": "gray-800",
+    "value": {
+     "light": "#414141"
+    },
+    "usage": "Chip outline and list-row checkbox outline."
+   },
+   {
+    "name": "bg-panel-header",
+    "value": {
+     "light": "#1b1b1b",
+     "dark": "#000000"
+    },
+    "usage": "Header strip of the filter and notification panels. Text: text-on-dark."
+   },
+   {
+    "name": "border-subtle",
+    "value": {
+     "light": "#e5e5e5",
+     "dark": "#2e2e2e"
+    },
+    "usage": "Dividers, card and panel outlines, table rules, popover edges (decorative; 1px). Since 1.5 one of the two border levels: border-subtle for structure, border-input for controls."
+   },
+   {
+    "name": "toggle-on",
+    "value": {
+     "light": "#92cf8d",
+     "dark": "#92cf8d"
+    },
+    "usage": "Toggle track when on (List and Sub Tabs boards)."
+   },
+   {
+    "name": "toggle-off",
+    "value": {
+     "light": "#d5d5d5",
+     "dark": "#4a4a4a"
+    },
+    "usage": "Toggle track when off."
+   },
+   {
+    "name": "avatar-bg",
+    "value": {
+     "light": "#c4e5cd",
+     "dark": "#2f4a37"
+    },
+    "usage": "Initial avatar circle in the header profile pill."
+   },
+   {
+    "name": "nav-active",
+    "value": {
+     "light": "#3b3b3b",
+     "dark": "#3b3b3b"
+    },
+    "usage": "Selected sub-item fill in the dark side navigation."
+   },
+   {
+    "name": "nav-divider",
+    "value": {
+     "light": "#333333",
+     "dark": "#333333"
+    },
+    "usage": "Dividers inside the dark side navigation."
+   },
+   {
+    "name": "nav-badge",
+    "value": {
+     "light": "#446beb",
+     "dark": "#446beb"
+    },
+    "usage": "Count pill in the side navigation. Figma #4B74F8 nudged so white text reaches 4.6:1."
+   },
+   {
+    "name": "thumb-bg",
+    "value": {
+     "light": "#e7e7e7",
+     "dark": "#2a2a2a"
+    },
+    "usage": "Placeholder behind product thumbnails."
+   },
+   {
+    "name": "overlay",
+    "value": {
+     "light": "rgba(0, 0, 0, 0.4)",
+     "dark": "rgba(0, 0, 0, 0.6)"
+    },
+    "usage": "Scrim behind side popups and popups."
+   },
+   {
+    "name": "bg-information-soft",
+    "value": {
+     "light": "rgba(241, 169, 83, 0.16)",
+     "dark": "rgba(241, 169, 83, 0.16)"
+    },
+    "usage": "Information status pill fill (\"ORDER PLACED\"). Text: text-information."
+   },
+   {
+    "name": "bg-success-soft",
+    "value": {
+     "light": "rgba(129, 187, 71, 0.16)",
+     "dark": "rgba(129, 187, 71, 0.16)"
+    },
+    "usage": "Success status pill fill (\"ACCEPTED\"). Text: text-success."
+   },
+   {
+    "name": "bg-attention-soft",
+    "value": {
+     "light": "#e8ebf5",
+     "dark": "#232838"
+    },
+    "usage": "Attention icon tile in notifications."
+   },
+   {
+    "name": "accent",
+    "value": {
+     "light": "#1ec81a",
+     "dark": "#1ec81a"
+    },
+    "usage": "Commmerce neon green (brand accent, since 1.11). A highlight beside black: count badges, the selected tab line, status dots. Never text on white and never a button fill with white text. Text on it: text-on-accent."
+   },
+   {
+    "name": "accent-soft",
+    "value": {
+     "light": "#e4f7e3",
+     "dark": "#15301a"
+    },
+    "usage": "Light tint of the accent for selected rows and views (since 1.11). Text on it: text-default."
+   },
+   {
+    "name": "accent-text",
+    "value": {
+     "light": "#12730f",
+     "dark": "#7fe27c"
+    },
+    "usage": "Accent green that is readable as text on surfaces (since 1.11)."
+   },
+   {
+    "name": "text-on-accent",
+    "value": {
+     "light": "#0a0b0a",
+     "dark": "#0a0b0a"
+    },
+    "usage": "Text and icons on the accent green (since 1.11)."
+   },
+   {
+    "name": "count-bg",
+    "value": {
+     "light": "{nav-badge}",
+     "dark": "{nav-badge}"
+    },
+    "usage": "Unread and count pills on buttons and navigation (since 1.11; was nav-badge). The refined look uses the accent."
+   },
+   {
+    "name": "count-text",
+    "value": {
+     "light": "{text-on-dark}",
+     "dark": "{text-on-dark}"
+    },
+    "usage": "Text on count-bg (since 1.11)."
+   },
+   {
+    "name": "tab-indicator",
+    "value": {
+     "light": "{border-strong}",
+     "dark": "{border-strong}"
+    },
+    "usage": "The line under the selected tab in status and link tabs (since 1.11). The selected label is also bold, so the line is never the only cue."
+   },
+   {
+    "name": "bg-selected",
+    "value": {
+     "light": "{bg-hover}",
+     "dark": "{bg-hover}"
+    },
+    "usage": "Background of a selected row in a resource list (since 1.11)."
+   }
+  ]
+ },
+ "type": {
+  "fonts": [],
+  "families": {
+   "sans": "\"Poppins\", system-ui, sans-serif",
+   "display": "var(--cm-font-sans)"
+  },
+  "groups": [
+   {
+    "name": "Desktop",
+    "family": "sans",
+    "styles": [
+     {
+      "name": "display-lg",
+      "fontSize": "40px",
+      "lineHeight": "48px",
+      "fontWeight": 600,
+      "usage": "Marketing/hero only: the one big heading of a marketing-style page (the docs home). 40/48. Never in product UI."
+     },
+     {
+      "name": "display",
+      "fontSize": "30px",
+      "lineHeight": "36px",
+      "fontWeight": 600,
+      "usage": "Large numbers and the rare marketing-style heading. 30/36."
+     },
+     {
+      "name": "heading-lg",
+      "fontSize": "24px",
+      "lineHeight": "32px",
+      "fontWeight": 600,
+      "usage": "Page titles (cm-page-header). 24/32 semibold."
+     },
+     {
+      "name": "heading-md",
+      "fontSize": "20px",
+      "lineHeight": "28px",
+      "fontWeight": 600,
+      "usage": "Modal and side panel titles. 20/28."
+     },
+     {
+      "name": "heading-section",
+      "fontSize": "18px",
+      "lineHeight": "26px",
+      "fontWeight": 600,
+      "usage": "Section headings inside a page (a group of cards, a settings section). 18/26 semibold (owner standard, 1.6)."
+     },
+     {
+      "name": "heading-sm",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 600,
+      "usage": "Card headings and form-group titles. 16/24 semibold."
+     },
+     {
+      "name": "body-lg",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 400,
+      "usage": "Long reading text. 16/24."
+     },
+     {
+      "name": "body-md",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "usage": "Default UI text: field values, buttons, list and table text. 14/20."
+     },
+     {
+      "name": "body-sm",
+      "fontSize": "13px",
+      "lineHeight": "18px",
+      "fontWeight": 400,
+      "usage": "Page descriptions, secondary lines, slim buttons, table cells. 13/18."
+     },
+     {
+      "name": "body-xs",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 400,
+      "usage": "Supporting text: help text, hints, error messages, meta; captions, badges, counts, table headers. 12/16. Nothing is smaller."
+     },
+     {
+      "name": "label",
+      "fontSize": "13px",
+      "lineHeight": "18px",
+      "fontWeight": 500,
+      "usage": "Form labels: fields, option groups, checkbox and radio group labels. 13/18 medium (owner standard, 1.6; was 14/20)."
+     }
+    ]
+   },
+   {
+    "name": "Responsive",
+    "family": "sans",
+    "styles": [
+     {
+      "name": "display-lg-resp",
+      "fontSize": "30px",
+      "lineHeight": "36px",
+      "fontWeight": 600,
+      "usage": "Marketing/hero only, on phones. 30/36."
+     },
+     {
+      "name": "display-resp",
+      "fontSize": "24px",
+      "lineHeight": "32px",
+      "fontWeight": 600,
+      "usage": "Display text on phones."
+     },
+     {
+      "name": "heading-lg-resp",
+      "fontSize": "20px",
+      "lineHeight": "28px",
+      "fontWeight": 600,
+      "usage": "Page titles on phones."
+     },
+     {
+      "name": "heading-md-resp",
+      "fontSize": "18px",
+      "lineHeight": "26px",
+      "fontWeight": 600,
+      "usage": "Modal and panel titles on phones."
+     },
+     {
+      "name": "heading-sm-resp",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 600,
+      "usage": "Section titles on phones (same as desktop)."
+     },
+     {
+      "name": "body-lg-resp",
+      "fontSize": "16px",
+      "lineHeight": "24px",
+      "fontWeight": 400,
+      "usage": "Reading text on phones."
+     },
+     {
+      "name": "body-md-resp",
+      "fontSize": "14px",
+      "lineHeight": "20px",
+      "fontWeight": 400,
+      "usage": "UI text on phones (same as desktop: text never shrinks below 14 on phones)."
+     },
+     {
+      "name": "body-sm-resp",
+      "fontSize": "13px",
+      "lineHeight": "18px",
+      "fontWeight": 400,
+      "usage": "Help text on phones."
+     },
+     {
+      "name": "body-xs-resp",
+      "fontSize": "12px",
+      "lineHeight": "16px",
+      "fontWeight": 400,
+      "usage": "Captions on phones."
+     },
+     {
+      "name": "label-resp",
+      "fontSize": "13px",
+      "lineHeight": "18px",
+      "fontWeight": 500,
+      "usage": "Form labels on phones."
+     }
+    ]
+   }
+  ]
+ },
+ "fontSize": {
+  "tokens": [
+   {
+    "name": "font-size-12",
+    "value": "12px",
+    "usage": "Captions, badges, counts, table headers. Smallest size."
+   },
+   {
+    "name": "font-size-13",
+    "value": "13px",
+    "usage": "Help text, slim buttons, secondary lines."
+   },
+   {
+    "name": "font-size-14",
+    "value": "14px",
+    "usage": "Default UI text."
+   },
+   {
+    "name": "font-size-16",
+    "value": "16px",
+    "usage": "Card and section headings, reading text."
+   },
+   {
+    "name": "font-size-18",
+    "value": "18px",
+    "usage": "Small headings on phones."
+   },
+   {
+    "name": "font-size-20",
+    "value": "20px",
+    "usage": "Modal titles, page titles on phones."
+   },
+   {
+    "name": "font-size-24",
+    "value": "24px",
+    "usage": "Page titles."
+   },
+   {
+    "name": "font-size-30",
+    "value": "30px",
+    "usage": "Display numbers."
+   },
+   {
+    "name": "font-size-40",
+    "value": "40px",
+    "usage": "Marketing and hero headings only (the docs home page). Not for product UI: components never use it."
+   }
+  ]
+ },
+ "lineHeight": {
+  "tokens": [
+   {
+    "name": "line-height-12",
+    "value": "16px",
+    "usage": "Line height for font-size-12."
+   },
+   {
+    "name": "line-height-13",
+    "value": "18px",
+    "usage": "Line height for font-size-13."
+   },
+   {
+    "name": "line-height-14",
+    "value": "20px",
+    "usage": "Line height for font-size-14."
+   },
+   {
+    "name": "line-height-16",
+    "value": "24px",
+    "usage": "Line height for font-size-16."
+   },
+   {
+    "name": "line-height-18",
+    "value": "26px",
+    "usage": "Line height for font-size-18."
+   },
+   {
+    "name": "line-height-20",
+    "value": "28px",
+    "usage": "Line height for font-size-20."
+   },
+   {
+    "name": "line-height-24",
+    "value": "32px",
+    "usage": "Line height for font-size-24."
+   },
+   {
+    "name": "line-height-30",
+    "value": "36px",
+    "usage": "Line height for font-size-30."
+   },
+   {
+    "name": "line-height-40",
+    "value": "48px",
+    "usage": "Line height for font-size-40."
+   }
+  ]
+ },
+ "spacing": {
+  "tokens": [
+   {
+    "name": "space-4",
+    "value": "4px",
+    "usage": "Icon to text inside small controls; badge and tag gaps."
+   },
+   {
+    "name": "space-8",
+    "value": "8px",
+    "usage": "Default gap inside controls and between related items (buttons in a row, label to field)."
+   },
+   {
+    "name": "space-12",
+    "value": "12px",
+    "usage": "Control side padding; gap between list rows and small cards."
+   },
+   {
+    "name": "space-16",
+    "value": "16px",
+    "usage": "Card padding on phones; gap between fields in a form."
+   },
+   {
+    "name": "space-20",
+    "value": "20px",
+    "usage": "The default gap between cards (cm-stack, cm-grid); gap between form sections."
+   },
+   {
+    "name": "space-24",
+    "value": "24px",
+    "usage": "Page padding (cm-page, cm-page-header); card padding (cm-card standard); gap between page sections (cm-layout)."
+   },
+   {
+    "name": "space-32",
+    "value": "32px",
+    "usage": "Gap between page sections."
+   },
+   {
+    "name": "space-40",
+    "value": "40px",
+    "usage": "Large section spacing."
+   },
+   {
+    "name": "space-48",
+    "value": "48px",
+    "usage": "Empty-state and hero spacing."
+   },
+   {
+    "name": "space-64",
+    "value": "64px",
+    "usage": "Largest layout spacing."
+   },
+   {
+    "name": "space-10",
+    "value": "10px",
+    "usage": "Deprecated since 1.5: off the 4px grid, kept with its old value for existing apps. Use space-8 (or space-12).",
+    "deprecated": true
+   },
+   {
+    "name": "space-15",
+    "value": "15px",
+    "usage": "Deprecated since 1.5: off the 4px grid, kept with its old value for existing apps. Use space-16 (or space-12).",
+    "deprecated": true
+   },
+   {
+    "name": "space-22",
+    "value": "22px",
+    "usage": "Deprecated since 1.5: off the 4px grid, kept with its old value for existing apps. Use space-24.",
+    "deprecated": true
+   },
+   {
+    "name": "space-30",
+    "value": "30px",
+    "usage": "Deprecated since 1.5: off the 4px grid, kept with its old value for existing apps. Use space-32.",
+    "deprecated": true
+   }
+  ]
+ },
+ "size": {
+  "tokens": [
+   {
+    "name": "control-height-sm",
+    "value": "32px",
+    "usage": "Small controls: toolbar and filter fields (size=\"small\"), slim buttons, segmented controls."
+   },
+   {
+    "name": "control-height-md",
+    "value": "36px",
+    "usage": "Default height of buttons and icon buttons (36x36); segmented controls."
+   },
+   {
+    "name": "control-height-lg",
+    "value": "40px",
+    "usage": "Default height of form fields (text field, select, combobox, search, date pickers; since 1.6), large buttons, and every button on touch screens."
+   },
+   {
+    "name": "control-height-touch",
+    "value": "44px",
+    "usage": "Form fields on touch screens (pointer: coarse); the minimum touch target of buttons (40px drawn, the hit area reaches 44px)."
+   },
+   {
+    "name": "icon-size-sm",
+    "value": "16px",
+    "usage": "Icons inside controls: buttons, fields, menu items."
+   },
+   {
+    "name": "icon-size-md",
+    "value": "20px",
+    "usage": "Navigation icons."
+   },
+   {
+    "name": "icon-size-lg",
+    "value": "24px",
+    "usage": "Feature icons: empty states, tiles."
+   },
+   {
+    "name": "badge-dot",
+    "value": "0px",
+    "usage": "Size of the dot before the label of a toned cm-badge (since 1.11). 0 = no dot; the refined look sets 6px."
+   }
+  ]
+ },
+ "radius": {
+  "tokens": [
+   {
+    "name": "radius-xs",
+    "value": "4px",
+    "usage": "Checkboxes and other small marks."
+   },
+   {
+    "name": "radius-sm",
+    "value": "6px",
+    "usage": "Controls: buttons, inputs, selects, badges, segmented controls, menu items."
+   },
+   {
+    "name": "radius-md",
+    "value": "8px",
+    "usage": "Cards, popovers, dropdowns, menus, toasts."
+   },
+   {
+    "name": "radius-lg",
+    "value": "12px",
+    "usage": "Panels, modals, side panels, bottom sheets."
+   },
+   {
+    "name": "radius-full",
+    "value": "9999px",
+    "usage": "Pills, avatars, toggles and circular icon buttons."
+   }
+  ]
+ },
+ "borderWidth": {
+  "tokens": [
+   {
+    "name": "border-1",
+    "value": "1px",
+    "usage": "Every border and separator in the file is 1px."
+   }
+  ]
+ },
+ "shadow": {
+  "tokens": [
+   {
+    "name": "shadow-0",
+    "value": "none",
+    "usage": "Cards and panels: flat, with a border-subtle line."
+   },
+   {
+    "name": "shadow-sm",
+    "value": {
+     "light": "0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08)"
+    },
+    "usage": "Small overlays: tooltips, menus."
+   },
+   {
+    "name": "shadow-md",
+    "value": {
+     "light": "0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)"
+    },
+    "usage": "Popovers and dropdowns: select and combobox lists, date pickers, search results, notification panel."
+   },
+   {
+    "name": "shadow-lg",
+    "value": {
+     "light": "0 16px 40px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06)"
+    },
+    "usage": "Modals, side panels, bottom sheets, toasts, save bars, dragged cards."
+   },
+   {
+    "name": "shadow-100",
+    "value": {
+     "light": "0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)"
+    },
+    "usage": "Deprecated since 1.5: use shadow-md (same value).",
+    "deprecated": true
+   }
+  ]
+ },
+ "motion": {
+  "tokens": [
+   {
+    "name": "duration-fast",
+    "value": "120ms",
+    "usage": "Hover, press, toggles, chevrons."
+   },
+   {
+    "name": "duration-base",
+    "value": "200ms",
+    "usage": "Opening and closing: popovers, panels, accordions."
+   },
+   {
+    "name": "easing-standard",
+    "value": "cubic-bezier(0.2, 0, 0, 1)",
+    "usage": "Every transition. Under prefers-reduced-motion components turn transitions off."
+   }
+  ]
+ },
+ "letterSpacing": {
+  "tokens": [
+   {
+    "name": "tracking-caps",
+    "value": "0.16em",
+    "usage": "Deprecated since 1.5: components no longer use uppercase text (sentence case everywhere). Kept for existing apps.",
+    "deprecated": true
+   }
+  ]
+ },
+ "looks": [
+  {
+   "id": "refined",
+   "name": "Refined",
+   "usage": "Opt-in look (since 1.11), set data-cm-look=\"refined\" on <html> next to data-cm-theme. Inter for interface text and Poppins for page titles; slightly green-tinted greys with darker supporting text; the Commmerce neon green on counts, the selected tab line and selected rows; dots on toned badges. Owner-approved for the CRM /v5 on 18 Nov 2026.",
+   "values": {
+    "any": {
+     "font-sans": "\"Inter\", \"Poppins\", system-ui, sans-serif",
+     "font-display": "\"Poppins\", \"Inter\", system-ui, sans-serif",
+     "badge-dot": "6px",
+     "count-bg": "{accent}",
+     "count-text": "{text-on-accent}",
+     "tab-indicator": "{accent}",
+     "bg-selected": "{accent-soft}"
+    },
+    "light": {
+     "bg-page": "#f5f6f4",
+     "bg-hover": "#f2f4f1",
+     "bg-inset": "#f7f8f6",
+     "bg-input-filled": "#f7f8f6",
+     "bg-icon": "#f2f4f1",
+     "bg-tag": "#eef0ec",
+     "thumb-bg": "#e8ebe6",
+     "border-subtle": "#e3e6e1",
+     "border-input": "#868c83",
+     "text-default": "#121412",
+     "text-tertiary": "#5c635a",
+     "text-secondary": "#9ca298",
+     "icon-default": "#80867d"
+    },
+    "dark": {
+     "bg-page": "#0c0d0c",
+     "bg-surface": "#141614",
+     "bg-hover": "#1c1f1c",
+     "bg-inset": "#181a18",
+     "bg-input-filled": "#1c1f1c",
+     "bg-icon": "#1c1f1c",
+     "bg-tag": "#23271f",
+     "thumb-bg": "#23271f",
+     "border-subtle": "#252924",
+     "border-input": "#6b7268",
+     "text-default": "#eef1ec",
+     "text-tertiary": "#9aa197",
+     "text-secondary": "#6b7268",
+     "icon-default": "#8a9087"
+    }
+   }
+  }
+ ]
+}
