@@ -1,0 +1,25 @@
+{
+  "name": "commmerce-vue-starter",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A small Vue 3 app built with Commmerce UI: an orders table, a modal with a bound form, FormData submission.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vite build && playwright test"
+  },
+  "dependencies": {
+    "@commmerce/tokens": "1.13.0",
+    "@commmerce/ui": "1.13.0",
+    "vue": "3.5.44"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "@vitejs/plugin-vue": "6.0.10",
+    "vite": "6.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

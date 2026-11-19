@@ -1,0 +1,41 @@
+<title>Commmerce UI</title>
+<meta name="description" content="The design system for building on Commmerce: tokens, components, icons and guidelines." />
+<link rel="icon" href="https://cdn.commmerce.com/commmerce/website/assets/images/compressed/commmerce-favicon.png" />
+<link rel="stylesheet" href="vendor/fonts.css" />
+<link rel="stylesheet" href="vendor/tokens.css" />
+<link rel="stylesheet" href="docs.css" />
+<script>
+  // Theme: the viewer's explicit choice on this site wins, then the host's data-theme, then the OS.
+  (function () {
+    var root = document.documentElement, saved = null;
+    try { saved = localStorage.getItem('cm-docs-theme'); } catch (e) {}
+    root.dataset.cmTheme = saved || root.getAttribute('data-theme') || 'auto';
+  })();
+</script>
+<script type="module" src="vendor/cdn.js"></script>
+<script type="module" src="app.js"></script>
+
+<a class="skip" href="#main">Skip to content</a>
+<header class="top">
+  <button class="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar"><cm-icon name="menu" size="20"></cm-icon></button>
+  <a class="brand" href="#" aria-label="Commmerce UI home">
+    <img class="logo logo--light" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-black.svg" alt="" width="164" height="12" />
+    <img class="logo logo--dark" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-white.svg" alt="" width="164" height="12" />
+    <span class="brand-ui">UI</span>
+  </a>
+  <nav class="topnav" aria-label="Sections"></nav>
+  <div class="top-end">
+    <div class="search" role="search">
+      <cm-icon name="search" size="16"></cm-icon>
+      <input id="q" type="search" placeholder="Search" aria-label="Search the docs" autocomplete="off"
+        aria-controls="results" aria-expanded="false" role="combobox" aria-autocomplete="list" />
+      <kbd>/</kbd>
+      <ul id="results" role="listbox" hidden></ul>
+    </div>
+    <button class="icon-btn" id="theme" aria-label="Switch to dark theme" title="Switch theme"><cm-icon name="moon" size="18"></cm-icon></button>
+  </div>
+</header>
+<div class="layout">
+  <aside id="sidebar" class="sidebar" aria-label="Section navigation"></aside>
+  <main id="main" tabindex="-1"></main>
+</div>

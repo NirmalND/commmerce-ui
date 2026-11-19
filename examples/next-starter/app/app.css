@@ -1,0 +1,7 @@
+/* Page background and type come from the tokens. Everything else is a Commmerce UI component. */
+body {
+  margin: 0;
+  background: var(--cm-bg-page);
+  color: var(--cm-text-default);
+  font-family: var(--cm-font-sans);
+}
