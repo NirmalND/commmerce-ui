@@ -4,7 +4,7 @@
 // don't depend on the fonts installed. This file runs at 1280px; phone widths are in standard-1-6-phone.test.ts (each file
 // keeps one viewport: WebKit under Playwright styles new shadow roots with stale media queries after a mid-file resize).
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
-import { page, userEvent } from '@vitest/browser/context';
+import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmCard, CmEmptyState, CmStatusTabs, CmResourceItem } from '../src/index.js';

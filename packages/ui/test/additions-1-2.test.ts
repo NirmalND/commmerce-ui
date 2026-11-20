@@ -1,6 +1,6 @@
 // 1.2 additions for the CRM rebuild: the phone icon, button tones and the inline empty state.
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmButton, CmEmptyState } from '../src/index.js';

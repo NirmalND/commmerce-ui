@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmTimelineItem } from '../src/index.js';

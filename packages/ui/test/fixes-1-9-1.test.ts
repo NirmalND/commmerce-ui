@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmInfoItem } from '../src/index.js';

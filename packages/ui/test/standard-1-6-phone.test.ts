@@ -2,7 +2,7 @@
 // that wrap (#31), the page-header title adornment (#32) and title size, status tabs that scroll or become a dropdown.
 // The whole file runs at 390px (see standard-1-6.test.ts for why each file keeps one viewport).
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
-import { page, userEvent } from '@vitest/browser/context';
+import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmCard, CmEmptyState, CmStatusTabs, CmResourceItem } from '../src/index.js';

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '../src/index.js';
 import { showToast, undoable, setStrings, resetStrings, type CmToast, type CmToastRegion } from '../src/index.js';
 

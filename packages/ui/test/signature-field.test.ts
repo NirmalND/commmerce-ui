@@ -1,6 +1,6 @@
 // 1.4: cm-signature-field (GitHub #26, CRM e-sign "Sign now").
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '@commmerce/tokens/fonts.css';
 import '../src/index.js';

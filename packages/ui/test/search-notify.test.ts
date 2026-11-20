@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterAll } from 'vitest';
-import { page, userEvent } from '@vitest/browser/context';
+import { page, userEvent } from 'vitest/browser';
 import '../src/index.js';
 import type { CmGlobalSearch, CmHeaderBar, CmNotificationPanel, GlobalSearchGroup } from '../src/index.js';
 

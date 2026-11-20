@@ -2,7 +2,7 @@
 // (40 on touch), labels 13/500, supporting text 12/16, badges 24px. Control heights, type, badges in sentence case, the segmented control.
 // Heights are border-box sizes set in px, so they don't depend on the font; text checks use computed font sizes only.
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmSegmentedControl, CmSelect, CmButton } from '../src/index.js';

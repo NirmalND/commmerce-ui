@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
-import { page, userEvent } from '@vitest/browser/context';
+import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import { resetStrings, setStrings } from '../src/index.js';
@@ -499,13 +499,17 @@ describe('cm-calendar: the app decides', () => {
 
   it('controlled: cm-move fires but the app changes the times; focus follows the event to its new day', async () => {
     const c = await mount(cal('controlled'));
+    // The app applies the move later, when the test says so. (A 20ms timer here flaked under load: the keyboard
+    // input could take longer than that, so the event had already moved by the "untouched" check.)
+    let apply = () => {};
     c.addEventListener('cm-move', (e) => {
       const d = (e as CustomEvent<CalendarMoveDetail>).detail;
-      setTimeout(() => { d.event.start = d.to.start; d.event.end = d.to.end; }, 20);
+      apply = () => { d.event.start = d.to.start; d.event.end = d.to.end; };
     });
     chip(c, 'e1').focus();
     await userEvent.keyboard(' {ArrowRight}{Enter}');
     expect(c.event('e1')!.start).toBe('2026-11-18T15:00'); // untouched until the app moves it
+    apply();
     await vi.waitFor(() => expect(c.event('e1')!.start).toBe('2026-11-19T15:00'));
     await vi.waitFor(() => expect(active(c)?.dataset.k).toBe('ev:e1:2026-11-19'));
     expect(c.revert('e1')).toBe(false);

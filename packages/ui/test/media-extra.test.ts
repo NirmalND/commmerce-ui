@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '../src/index.js';
 import { initials, type CmTooltip, type CmAvatar, type CmThumbnail } from '../src/index.js';
 

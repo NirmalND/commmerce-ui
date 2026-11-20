@@ -50,7 +50,7 @@ jobs:
   # The full build, the docs build and the packed packages (npm pack, installed into a fresh app, checked in
   # Chromium and WebKit).
   build:
-    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    runs-on: ubuntu-24.04  # pinned so Playwright's browser system deps stay stable; ubuntu-latest moves on
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -70,7 +70,7 @@ jobs:
       - run: node scripts/test-packages.mjs chromium,webkit
 
   # The component, React wrapper (React 18 and 19) and App Bridge suites in Chromium, Firefox and WebKit, two shards
-  # per browser. Firefox can't run on the owner's Mac (Playwright 1.49's Firefox fails on macOS 27), so CI is where
+  # per browser. Firefox doesn't start on the owner's Mac (checked again with Playwright 1.64), so CI is where
   # Firefox gets tested.
   test:
     needs: plan

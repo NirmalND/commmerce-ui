@@ -2,7 +2,7 @@
 // mobile-menu labels break between words (a badge moves under the label instead), and cm-resource-list mobile="stack".
 // The whole file runs at 390px (see standard-1-6.test.ts for why each file keeps one viewport).
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 

@@ -1,7 +1,7 @@
 // cm-command-palette on a 390px phone: full screen, a close button, no Esc keycap. The whole file runs at 390px
 // (each file keeps one viewport, see standard-1-6.test.ts).
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmCommandPalette } from '../src/index.js';
