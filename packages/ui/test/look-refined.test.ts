@@ -38,21 +38,21 @@ describe('refined look (1.11)', () => {
     expect(getComputedStyle(root).getPropertyValue('--cm-bg-page').trim()).toBe('#f6f6f6');
   });
 
-  it('refined: Inter for text, Poppins for the page title, green counts with dark text, green tab line, tinted selected row, badge dot', async () => {
+  it('refined (1.20): Poppins throughout, blue counts with white text, blue tab line, blue-tinted selected row, badge dot', async () => {
     root.setAttribute('data-cm-look', 'refined');
     await mount(MARKUP);
-    expect(getComputedStyle(document.querySelector('cm-badge')!).fontFamily).toMatch(/^"?Inter/);
+    expect(getComputedStyle(document.querySelector('cm-badge')!).fontFamily).toMatch(/^"?Poppins/);
     expect(getComputedStyle(shadow('cm-page-header', 'h1')).fontFamily).toMatch(/^"?Poppins/);
     const count = getComputedStyle(shadow('cm-button', '.count'));
-    expect(count.backgroundColor).toBe(rgb('#1ec81a'));
-    expect(count.color).toBe(rgb('#0a0b0a'));
-    expect(getComputedStyle(shadow('cm-status-tabs', "button[aria-selected='true']"), '::after').backgroundColor).toBe(rgb('#1ec81a'));
+    expect(count.backgroundColor).toBe(rgb('#446beb'));
+    expect(count.color).toBe(rgb('#ffffff'));
+    expect(getComputedStyle(shadow('cm-status-tabs', "button[aria-selected='true']"), '::after').backgroundColor).toBe(rgb('#446beb'));
     const item = document.querySelector('cm-resource-item')!;
-    expect(getComputedStyle(item.shadowRoot!.querySelector('.row')!).backgroundColor).toBe(rgb('#e4f7e3'));
+    expect(getComputedStyle(item.shadowRoot!.querySelector('.row')!).backgroundColor).toBe(rgb('#ecf0fd'));
     const toned = getComputedStyle(shadow("cm-badge[tone='success']", 'span'), '::before');
     expect(toned.width).toBe('6px');
     expect(getComputedStyle(shadow("cm-badge[tone='neutral']", 'span'), '::before').content).toMatch(/^(none|normal)$/);
-    expect(getComputedStyle(root).getPropertyValue('--cm-bg-page').trim()).toBe('#f5f6f4');
+    expect(getComputedStyle(root).getPropertyValue('--cm-bg-page').trim()).toBe('#f5f5f5');
   });
 
   it('refined + dark theme uses the dark values, not the light look values', async () => {
@@ -60,9 +60,9 @@ describe('refined look (1.11)', () => {
     root.setAttribute('data-cm-theme', 'dark');
     await mount(MARKUP);
     const cs = getComputedStyle(root);
-    expect(cs.getPropertyValue('--cm-bg-page').trim()).toBe('#0c0d0c');
-    expect(cs.getPropertyValue('--cm-text-default').trim()).toBe('#eef1ec');
-    expect(getComputedStyle(shadow('cm-button', '.count')).backgroundColor).toBe(rgb('#1ec81a'));
+    expect(cs.getPropertyValue('--cm-bg-page').trim()).toBe('#0c0c0c');
+    expect(cs.getPropertyValue('--cm-text-default').trim()).toBe('#eeeeee');
+    expect(getComputedStyle(shadow('cm-button', '.count')).backgroundColor).toBe(rgb('#446beb'));
   });
 });
 
@@ -80,7 +80,7 @@ describe('1.19 additions', () => {
     expect(ring()).toBe(rgb('#000000'));
     root.setAttribute('data-cm-look', 'refined');
     await nextFrame();
-    expect(ring()).toBe(rgb('#e3e6e1'));
+    expect(ring()).toBe(rgb('#e3e3e3'));
   });
 });
 
@@ -107,5 +107,13 @@ describe('1.19: phone navigation marks the current page (was a CRM-only patch)',
     expect(getComputedStyle(cur).fontWeight).toBe('600');
     expect(getComputedStyle(cur).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(getComputedStyle(other).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
+});
+
+describe('1.20: refined look in Commmerce blue', () => {
+  it('initials avatar uses the light blue, not green', async () => {
+    root.setAttribute('data-cm-look', 'refined');
+    await mount('<cm-avatar name="Asha K"></cm-avatar>');
+    expect(getComputedStyle(root).getPropertyValue('--cm-avatar-bg').trim()).toBe('#ecf0fd');
   });
 });

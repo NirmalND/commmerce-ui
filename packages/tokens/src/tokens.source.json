@@ -551,6 +551,14 @@
     "usage": "Count pill in the side navigation. Figma #4B74F8 nudged so white text reaches 4.6:1."
    },
    {
+    "name": "nav-badge-soft",
+    "value": {
+     "light": "#ecf0fd",
+     "dark": "#1a2340"
+    },
+    "usage": "Light tint of the Commmerce blue (nav-badge) for selected rows and views in the refined look (since 1.20). Text on it: text-default."
+   },
+   {
     "name": "thumb-bg",
     "value": {
      "light": "#e7e7e7",
@@ -628,7 +636,7 @@
      "light": "{nav-badge}",
      "dark": "{nav-badge}"
     },
-    "usage": "Unread and count pills on buttons and navigation (since 1.11; was nav-badge). The refined look uses the accent."
+    "usage": "Unread and count pills on buttons and navigation (since 1.11; was nav-badge). Commmerce blue in both looks."
    },
    {
     "name": "count-text",
@@ -1161,48 +1169,47 @@
   {
    "id": "refined",
    "name": "Refined",
-   "usage": "Opt-in look (since 1.11), set data-cm-look=\"refined\" on <html> next to data-cm-theme. Inter for interface text and Poppins for page titles; slightly green-tinted greys with darker supporting text; the Commmerce neon green on counts, the selected tab line and selected rows; dots on toned badges. Owner-approved for the CRM /v5 on 18 Nov 2026.",
+   "usage": "Opt-in look (since 1.11), set data-cm-look=\"refined\" on <html> next to data-cm-theme. Poppins like the default look (since 1.20; was Inter for interface text); neutral greys with darker supporting text (since 1.20; were green-tinted); the Commmerce blue (nav-badge) on counts, the selected tab line and, as a light tint, selected rows (since 1.20; was the neon green accent); dots on toned badges. Owner decisions: CRM /v5 on 18 Nov 2026, blue and Poppins on 20 Nov 2026.",
    "values": {
     "any": {
-     "font-sans": "\"Inter\", \"Poppins\", system-ui, sans-serif",
-     "font-display": "\"Poppins\", \"Inter\", system-ui, sans-serif",
      "badge-dot": "6px",
-     "count-bg": "{accent}",
-     "count-text": "{text-on-accent}",
-     "tab-indicator": "{accent}",
-     "bg-selected": "{accent-soft}",
-     "account-ring": "{border-subtle}"
+     "count-bg": "{nav-badge}",
+     "count-text": "{text-on-dark}",
+     "tab-indicator": "{nav-badge}",
+     "bg-selected": "{nav-badge-soft}",
+     "account-ring": "{border-subtle}",
+     "avatar-bg": "{nav-badge-soft}"
     },
     "light": {
-     "bg-page": "#f5f6f4",
-     "bg-hover": "#f2f4f1",
-     "bg-inset": "#f7f8f6",
-     "bg-input-filled": "#f7f8f6",
-     "bg-icon": "#f2f4f1",
-     "bg-tag": "#eef0ec",
-     "thumb-bg": "#e8ebe6",
-     "border-subtle": "#e3e6e1",
-     "border-input": "#868c83",
-     "text-default": "#121412",
-     "text-tertiary": "#5c635a",
-     "text-secondary": "#9ca298",
-     "icon-default": "#80867d"
+     "bg-page": "#f5f5f5",
+     "bg-hover": "#f2f2f2",
+     "bg-inset": "#f7f7f7",
+     "bg-input-filled": "#f7f7f7",
+     "bg-icon": "#f2f2f2",
+     "bg-tag": "#eeeeee",
+     "thumb-bg": "#e8e8e8",
+     "border-subtle": "#e3e3e3",
+     "border-input": "#878787",
+     "text-default": "#131313",
+     "text-tertiary": "#5e5e5e",
+     "text-secondary": "#9d9d9d",
+     "icon-default": "#818181"
     },
     "dark": {
-     "bg-page": "#0c0d0c",
-     "bg-surface": "#141614",
-     "bg-hover": "#1c1f1c",
-     "bg-inset": "#181a18",
-     "bg-input-filled": "#1c1f1c",
-     "bg-icon": "#1c1f1c",
-     "bg-tag": "#23271f",
-     "thumb-bg": "#23271f",
-     "border-subtle": "#252924",
-     "border-input": "#6b7268",
-     "text-default": "#eef1ec",
-     "text-tertiary": "#9aa197",
-     "text-secondary": "#6b7268",
-     "icon-default": "#8a9087"
+     "bg-page": "#0c0c0c",
+     "bg-surface": "#151515",
+     "bg-hover": "#1d1d1d",
+     "bg-inset": "#191919",
+     "bg-input-filled": "#1d1d1d",
+     "bg-icon": "#1d1d1d",
+     "bg-tag": "#232323",
+     "thumb-bg": "#232323",
+     "border-subtle": "#262626",
+     "border-input": "#6c6c6c",
+     "text-default": "#eeeeee",
+     "text-tertiary": "#9b9b9b",
+     "text-secondary": "#6c6c6c",
+     "icon-default": "#8b8b8b"
     }
    }
   }
