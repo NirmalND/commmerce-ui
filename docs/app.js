@@ -933,14 +933,14 @@ pages['/start/flutter'] = () => ({ title: 'Flutter', html: `
   <p class="status-line"><span class="muted">${STABLE ? 'Version' : 'Preview, version'} ${PREVIEW.version}. Built and tested with Flutter 3.32. ${STABLE ? 'Widget constructors follow the compatibility policy.' : 'Widget APIs can change between releases.'}</span></p>
   <p><a class="more" href="flutter/" target="_blank" rel="noopener">Open the live Flutter demo →</a> <span class="muted small">(the Commmerce admin dashboard, orders and product editor, rebuilt with the package, plus a Components page with every newer widget; resize the window to see the phone and tablet layouts)</span></p>
   ${h2('Install')}
-  <p>The package is not on pub.dev yet. Commmerce teams add it from the repository:</p>
+  <p>The package is not on pub.dev yet. Add it from the public repository:</p>
   ${codeBlock([{ label: 'pubspec.yaml', lang: 'html', code: `dependencies:
   commmerce_ui:
     git:
-      url: git@github.com:NirmalND/commmerce-ui.git
+      url: https://github.com/commmerce-dev/commmerce-ui.git
       path: flutter/commmerce_ui
       ref: v${PREVIEW.version}   # a release tag; change it to upgrade` }])}
-  ${note(`The package will be published on pub.dev later, so developers outside Commmerce can install it. Until then it needs access to the repository. Ask at ${mail('Flutter package')}.`)}
+  ${note(`The package will be published on pub.dev later. Until then, install it from the repository as above. Questions: ${mail('Flutter package')}.`)}
   ${h2('Set up the theme')}
   ${codeBlock([{ label: 'main.dart', lang: 'jsx', code: `import 'package:commmerce_ui/commmerce_ui.dart';
 

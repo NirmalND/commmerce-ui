@@ -1,7 +1,7 @@
 name: Publish to npm
 # Push a tag like v0.6.0 (matching every package.json version) to publish.
 # Authenticates with npm trusted publishing (OIDC), no token: each @commmerce package on npmjs.com has a trusted
-# publisher (GitHub Actions, NirmalND/commmerce-ui, release.yml, "Allow npm publish") and refuses 2FA-bypass tokens.
+# publisher (GitHub Actions, commmerce-dev/commmerce-ui, release.yml, "Allow npm publish") and refuses 2FA-bypass tokens.
 # A new package must be published once by hand (npm login as "commmerce") before its trusted publisher can be added.
 on:
   push: { tags: ['v*'] }
