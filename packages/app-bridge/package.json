@@ -15,6 +15,11 @@
     "email": "support@commmerce.com"
   },
   "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commmerce-dev/commmerce-ui.git",
+    "directory": "packages/app-bridge"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -14,6 +14,11 @@
     "email": "support@commmerce.com"
   },
   "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commmerce-dev/commmerce-ui.git",
+    "directory": "packages/tokens"
+  },
   "type": "module",
   "main": "./dist/tokens.js",
   "types": "./dist/tokens.d.ts",
