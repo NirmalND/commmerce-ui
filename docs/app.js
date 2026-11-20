@@ -909,6 +909,16 @@ pages['/start/themes'] = () => ({ title: 'Themes and tokens', html: `
 <html data-cm-theme="auto">   <!-- follows the operating system -->` }])}
   <p>The attribute works on any element, so one area can be dark. The switch in this site's header uses it.</p>
   ${note('When your app is embedded, follow the admin\'s theme: <a href="#/apps/app-bridge">App Bridge</a> gives it in <code>app.ready</code> and the <code>theme.change</code> event. Outside the admin, use <code>auto</code>.')}
+  ${h2('Pick a look', 'looks')}
+  <p>Next to the theme, <code>data-cm-look</code> picks the look. Commmerce products use <code>refined</code>, and so does this site:</p>
+  ${codeBlock([{ label: 'HTML', lang: 'html', code: `<html data-cm-theme="light" data-cm-look="refined">` }])}
+  ${table(['', 'Default (no attribute)', 'Refined'], [
+    '<tr><th scope="row">Text</th><td>Poppins</td><td>Poppins</td></tr>',
+    '<tr><th scope="row">Greys</th><td>The original Commmerce greys</td><td>Neutral greys with darker supporting text</td></tr>',
+    '<tr><th scope="row">Counts, selected tab, selected rows</th><td>Blue counts, black tab line, grey selected rows</td><td>Commmerce blue (<code>--cm-nav-badge</code>) counts and tab line, light blue selected rows and initials avatar (<code>--cm-nav-badge-soft</code>)</td></tr>',
+    '<tr><th scope="row">Toned badges</th><td>No dot</td><td>A dot before the label</td></tr>',
+  ])}
+  <p>Both looks work in light, dark and auto themes and use the same tokens, so your CSS needs no changes. Status colours (success, critical, attention) are the same in both. Apps shown inside the admin should follow the admin and not set a look of their own.</p>
   ${h2('Use tokens in your CSS')}
   <p>Use semantic tokens (<code>--cm-bg-surface</code>, <code>--cm-text-default</code>, <code>--cm-border-input</code>) so your styles follow the theme and future changes. The <code>gray-*</code> scale is raw palette and does not change between themes. Browse every token in <a href="#/foundations/tokens">Tokens</a>.</p>` });
 
@@ -1868,7 +1878,7 @@ planned.forEach((p) => (pages[`/components/${p.slug}`] = () => ({ title: p.name,
 /* ---- Patterns ---- */
 // A whole page around the admin frame: what the merchant's window loads.
 const frameDoc = (body, a, theme) => `<!doctype html>
-<html lang="en"${theme ? ` data-cm-theme="${theme}"` : ''}>
+<html lang="en" data-cm-look="refined"${theme ? ` data-cm-theme="${theme}"` : ''}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

@@ -1767,7 +1767,7 @@ export const components = [
     slug: 'status-tabs', tag: 'cm-status-tabs', react: 'StatusTabs', name: 'Status tabs', group: 'Lists',
     responsive: ["Tabs stay on one line; when they don't fit the component's width, the row scrolls sideways, snaps to a tab and fades out at the edge that has more tabs past it (since 1.6), so it reads as a row that scrolls.", "When the window is 640px wide or less, tabs are `space-16` apart instead of `space-24`. With `mobile=\"select\"` they become a dropdown of the same choices (with counts) instead (since 1.6)."],
     summary: 'Filters a list by status, with a count for each status.',
-    lead: 'Statuses in a 40px row of 14px medium labels, `space-24` apart, over a hairline. The chosen one is black and semibold with a 2px black underline; the others are grey. A count sits after the label in a small neutral pill. `size="small"` (13px, 32px row) is for view switches inside a card. Since 1.5 (before: 18px labels with counts in brackets).',
+    lead: 'Statuses in a 40px row of 14px medium labels, `space-24` apart, over a hairline. The chosen one is black and semibold with a 2px underline (black, or Commmerce blue in the [[refined look|/start/themes?s=looks]]); the others are grey. A count sits after the label in a small neutral pill. `size="small"` (13px, 32px row) is for view switches inside a card. Since 1.5 (before: 18px labels with counts in brackets).',
     examples: [
       { title: 'Order statuses', html: `<cm-status-tabs controls="order-list">
   <option value="all" count="233">All</option>
@@ -2689,7 +2689,7 @@ ${outreachEvents}
     slug: 'link-tabs', tag: 'cm-link-tabs', react: 'LinkTabs', name: 'Link tabs', group: 'Navigation',
     responsive: ["Tabs stay on one line; when they don't fit the component's width, the row scrolls sideways.", "When the window is 640px wide or less, tabs are 16px apart instead of 24px."],
     summary: 'Links between sibling pages, such as the sections of Settings.',
-    lead: 'A row of 14px medium links over a thin rule, 24px apart. The page you are on is black with a black underline; the others are grey. Each tab is its own page with its own address, so it can be bookmarked and opened in a new tab. To filter one list in place, use Status tabs.',
+    lead: 'A row of 14px medium links over a thin rule, 24px apart. The page you are on is black with a underline (black, or Commmerce blue in the [[refined look|/start/themes?s=looks]]); the others are grey. Each tab is its own page with its own address, so it can be bookmarked and opened in a new tab. To filter one list in place, use Status tabs.',
     examples: [
       { title: 'Settings sections', html: `<cm-link-tabs label="Settings sections">
   <cm-nav-item label="General" href="#general" current></cm-nav-item>

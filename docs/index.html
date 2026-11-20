@@ -10,6 +10,8 @@
     var root = document.documentElement, saved = null;
     try { saved = localStorage.getItem('cm-docs-theme'); } catch (e) {}
     root.dataset.cmTheme = saved || root.getAttribute('data-theme') || 'auto';
+    // The site and its examples use the refined look, the one Commmerce products use (20 Nov 2026).
+    root.dataset.cmLook = 'refined';
   })();
 </script>
 <script type="module" src="vendor/cdn.js"></script>
