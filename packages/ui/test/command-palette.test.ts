@@ -84,7 +84,11 @@ describe('cm-command-palette', () => {
     const el = await mount();
     expect(shadow(el, 'dialog').open).toBe(false);
     const opener = document.getElementById('opener')!;
+    // A real click first: it gives this test's frame window focus, so focus() takes even while other test files run
+    // in parallel in the same Firefox window (issue #2).
+    await userEvent.click(opener);
     opener.focus();
+    expect(document.activeElement).toBe(opener);
     let opened = 0;
     el.addEventListener('cm-open', () => opened++);
     el.show(); await settle(el);

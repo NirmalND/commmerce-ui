@@ -148,6 +148,9 @@ describe('cm-combobox multiple: tags', () => {
   it('states: hover darkens the outline, focus adds the ring, disabled greys the box and its tags', async () => {
     const el = await multi(['Dairy']);
     const box = shadow(el, '.box');
+    // Park the pointer off the box first: an earlier test can leave it where the new box renders, and Firefox then
+    // shows the box hovered from the start (issue #2).
+    await userEvent.hover(document.getElementById('after')!);
     const rest = getComputedStyle(box).borderTopColor;
     await userEvent.hover(box);
     expect(getComputedStyle(box).borderTopColor).not.toBe(rest);

@@ -130,7 +130,8 @@ describe('cm-file-upload 1.3: capture and the single-photo tile', () => {
     el.addFiles([file('a.jpg', 'image/jpeg')]); await settle(el);
     let changes = 0;
     el.addEventListener('change', () => changes++);
-    (el.shadowRoot!.querySelectorAll('.actions button')[1] as HTMLButtonElement).click();
+    // A real click, as a user would: it also gives this test's frame window focus in Firefox (issue #2).
+    await userEvent.click(el.shadowRoot!.querySelectorAll('.actions button')[1] as HTMLButtonElement);
     await settle(el);
     expect(el.files).toEqual([]);
     expect(changes).toBe(1);
