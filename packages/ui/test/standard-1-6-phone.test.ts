@@ -74,7 +74,8 @@ describe('cm-resource-item actions wrap on a phone (#31)', () => {
     const list = await mount<HTMLElement>(row(), 358);
     const { content, actions, row: r } = parts(list);
     expect(actions.top).toBeGreaterThanOrEqual(content.bottom);
-    expect(Math.abs(actions.left - r.left)).toBeLessThanOrEqual(1);
+    // At the start of the row's content box (rows pad the list's 12px inset inside since 1.17.1).
+    expect(Math.abs(actions.left - content.left)).toBeLessThanOrEqual(1);
     expect(content.width).toBeGreaterThan(192);
     expect(actions.right).toBeLessThanOrEqual(r.right + 0.5);
     expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth);

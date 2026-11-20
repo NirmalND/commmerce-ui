@@ -1154,8 +1154,9 @@ class CmResourceList extends StatelessWidget {
     final rowH = compact ? 40.0 : 56.0;
     final rowPad = compact ? CmSpace.s4 : CmSpace.s8;
     final media = compact || narrow ? 32.0 : 40.0;
-    // Rows sit 12 in from the list's edges and pad 8 inside (0 on phones), so their box starts 20 from the edge
-    // (12 on phones). The select-all row runs edge to edge and puts its box at the same place.
+    // Rows run edge to edge (1.17.1, owner rule: a hover or selected row is highlighted across the full width) and
+    // pad 12 + 8 inside (12 on phones), so their box starts 20 from the edge (12 on phones). The select-all row
+    // puts its box at the same place.
     const listPad = CmSpace.s12;
     final inner = narrow ? 0.0 : CmSpace.s8;
     final gap = narrow ? CmSpace.s8 : CmSpace.s12;
@@ -1196,7 +1197,7 @@ class CmResourceList extends StatelessWidget {
             hoverColor: c.bgHover,
             child: Container(
               constraints: BoxConstraints(minHeight: cmControlHeight(context, rowH)),
-              padding: EdgeInsets.symmetric(horizontal: inner, vertical: rowPad),
+              padding: EdgeInsets.symmetric(horizontal: listPad + inner, vertical: rowPad),
               decoration: BoxDecoration(border: last ? null : Border(bottom: BorderSide(color: c.borderSubtle))),
               alignment: AlignmentDirectional.centerStart,
               child: line,
@@ -1207,7 +1208,7 @@ class CmResourceList extends StatelessWidget {
     }
 
     final rows = loading
-        ? List.generate(3, (_) => SizedBox(height: rowH, child: Padding(padding: EdgeInsets.symmetric(horizontal: inner, vertical: rowPad + 8), child: const CmSkeleton(height: 16))))
+        ? List.generate(3, (_) => SizedBox(height: rowH, child: Padding(padding: EdgeInsets.symmetric(horizontal: listPad + inner, vertical: rowPad + 8), child: const CmSkeleton(height: 16))))
         : [for (var k = 0; k < items.length; k++) row(items[k], k == items.length - 1)];
 
     final toolbar = selectable && items.isNotEmpty
@@ -1251,7 +1252,7 @@ class CmResourceList extends StatelessWidget {
         if (!loading && items.isEmpty && empty != null)
           empty!
         else
-          Padding(padding: const EdgeInsets.fromLTRB(listPad, 0, listPad, CmSpace.s8), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: rows)),
+          Padding(padding: const EdgeInsets.only(bottom: CmSpace.s8), child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: rows)),
       ]),
     );
   }

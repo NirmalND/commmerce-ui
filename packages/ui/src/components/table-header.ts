@@ -114,11 +114,11 @@ export class CmTableHeader extends CmLocalizedElement {
       input:focus-visible + .box { outline: 2px solid var(--cm-border-strong); outline-offset: 2px; }
       slot { display: none; }
       /* In a cm-resource-list (resource-rows): the bar's content box matches a row's content box, so the same
-         --cm-table-columns grid (with column-gap space-20) lands on the same x positions. The list pads its rows
-         --_rl from its edges; rows pad --_rp inline, start with a 16px checkbox and a space-12 gap when selectable,
-         and end with the gap before their (possibly empty) actions. On phones: no row padding, a 20px checkbox, space-8 gaps.
+         --cm-table-columns grid (with column-gap space-20) lands on the same x positions. Rows run to the list's edges
+         and pad --_rl + --_rp inline (--_rl on phones), start with a 16px checkbox and a space-12 gap when selectable,
+         and end with the gap before their (possibly empty) actions. On phones: a 20px checkbox, space-8 gaps.
          The bar runs to the list's edges with hairlines above and below, and lies under the list's select-all box.
-         --_rl and --_rp are cm-resource-list's list padding (--_pad) and row padding: change both together. */
+         --_rl and --_rp are cm-resource-list's --_pad and the row's own space-8: change both together. */
       :host([resource-rows]) { --_rl: var(--cm-space-12); --_rp: var(--cm-space-8); }
       :host([resource-rows]) .bar {
         margin-inline: calc(-1 * var(--_rl));

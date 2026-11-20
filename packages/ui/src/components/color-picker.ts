@@ -341,7 +341,7 @@ export class CmColorPicker extends CmLocalizedElement {
   #onAreaDown(e: PointerEvent) {
     if (e.button !== 0) return;
     const el = e.currentTarget as HTMLElement;
-    el.setPointerCapture?.(e.pointerId);
+    try { el.setPointerCapture(e.pointerId); } catch { /* synthetic events have no active pointer */ }
     el.focus();
     this.#drag = 'area';
     this.#areaAt(e);
@@ -471,7 +471,7 @@ export class CmColorPicker extends CmLocalizedElement {
   #onHandleDown(e: PointerEvent, i: number) {
     if (e.button !== 0) return;
     e.stopPropagation();
-    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch { /* synthetic events have no active pointer */ }
     this.#selectStop(i);
     this.#drag = i;
   }

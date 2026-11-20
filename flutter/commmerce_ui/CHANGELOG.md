@@ -3,6 +3,11 @@
 The Flutter package shares its version number with the Commmerce UI web packages. Full release notes:
 https://commmerce.com/blog/commmerceui/#releases
 
+## 1.17.1
+
+* `CmResourceList`: a selected or hovered row is highlighted across the full width of the list (edge to edge, like
+  the select-all bar), and the lines between rows run edge to edge. The checkboxes and content don't move.
+
 ## 1.17.0
 
 * No Flutter changes yet: the colour picker panel (`cm-color-picker`, brand and recent colours, opacity, formats, gradients) is web only for now.

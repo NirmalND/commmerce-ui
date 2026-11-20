@@ -1,6 +1,11 @@
 // Release notes, newest first. Cloud build sessions add an entry here when a batch ships
 // (an <h2 id="vX-Y-Z"> heading and a list). Plain HTML; internal links use href="#/path".
 export const releaseNotes = `
+  <h2 id="v1-17-1">v1.17.1</h2>
+  <ul>
+    <li><a href="#/components/resource-list">Resource list</a>: a hovered or selected row is now highlighted across the full width of the list, edge to edge like the bulk-action bar above it, and the lines between rows run edge to edge too. Row content, checkboxes and a <code>cm-table-header</code> stay exactly where they were. Flutter <code>CmResourceList</code> matches.</li>
+    <li>Fix: the <a href="#/components/color-picker">colour picker</a> no longer throws when a drag starts from a pointer the browser can't capture (seen in Firefox with scripted pointer events).</li>
+  </ul>
   <h2 id="v1-17-0">v1.17.0</h2>
   <ul>
     <li><strong><a href="#/components/color-picker">Colour picker</a></strong> (new, <code>cm-color-picker</code>): a saturation and brightness square, hue and opacity (<code>alpha</code>) sliders, the value as hex, RGB or HSL (<code>formats</code>), the browser's eyedropper where it has one, linear and radial gradients (<code>gradient</code>), and swatches for the store's <strong>brand colours</strong>, the merchant's <strong>recent colours</strong> and the palette. Every colour they commit that isn't a brand or palette colour goes first in Recent (<code>cm-recent-change</code>).</li>

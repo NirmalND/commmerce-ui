@@ -1,6 +1,6 @@
 {
   "name": "@commmerce/app-bridge",
-  "version": "1.17.0",
+  "version": "1.17.1",
   "description": "Connects an app embedded in the Commmerce admin to the admin: toasts, modals, navigation, save bar, resource picker, loading bar and session tokens.",
   "keywords": [
     "commmerce",
@@ -43,7 +43,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@commmerce/ui": "1.17.0",
+    "@commmerce/ui": "1.17.1",
     "@vitest/browser": "^2.1.8",
     "playwright": "^1.49.0"
   }

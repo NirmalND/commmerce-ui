@@ -382,6 +382,19 @@ void main() {
       });
     });
 
+    testWidgets('a selected row is highlighted across the full width of the list (1.17.1)', (t) async {
+      await desktop(() async {
+        final plain = [for (final n in ['Asha', 'Ravi']) CmResourceItem(id: n, semanticLabel: n, child: Text(n))];
+        await t.pumpWidget(app(CmResourceList(items: plain, selected: const {'Asha'}, onSelectionChanged: (_) {})));
+        final list = t.getRect(find.byType(CmResourceList));
+        final fill = t.getRect(find.ancestor(of: find.text('Asha'), matching: find.byType(Material)).first);
+        // Inside the list's 1px border, edge to edge.
+        expect(fill.left, closeTo(list.left + 1, 0.5));
+        expect(fill.right, closeTo(list.right - 1, 0.5));
+        await t.pumpWidget(const SizedBox());
+      });
+    });
+
     testWidgets('on phones the actions wrap under the content when it would get too narrow (#31)', (t) async {
       window(t, const Size(360, 800));
       await t.pumpWidget(app(CmResourceList(items: items), width: 360));

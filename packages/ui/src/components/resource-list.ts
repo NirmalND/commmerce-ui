@@ -126,7 +126,8 @@ export class CmResourceItem extends CmLocalizedElement {
          (resource-rows in table-header.ts): change both together. */
       .row {
         display: flex; align-items: center; gap: var(--cm-space-12); box-sizing: border-box;
-        min-height: var(--cm-resource-row-height, 56px); padding: var(--cm-resource-row-padding, 8px) var(--cm-space-8);
+        min-height: var(--cm-resource-row-height, 56px);
+        padding: var(--cm-resource-row-padding, 8px) calc(var(--_cm-row-inset, 0px) + var(--cm-space-8));
         font-size: var(--cm-font-size-14); line-height: var(--cm-line-height-14);
       }
       @media (pointer: coarse) { .row { min-height: max(var(--cm-resource-row-height, 56px), var(--cm-control-height-touch, 44px)); } }
@@ -158,7 +159,7 @@ export class CmResourceItem extends CmLocalizedElement {
       @media (max-width: 640px) {
         :host(:not([actions='inline']):not([columns])) .row.has-actions { flex-wrap: wrap; }
         :host(:not([actions='inline']):not([columns])) .has-actions .content { flex: 1 1 12rem; }
-        .row { gap: var(--cm-space-8); padding-inline: 0; }
+        .row { gap: var(--cm-space-8); padding-inline: var(--_cm-row-inset, 0px); }
         .check { width: 20px; height: 20px; }
         ::slotted([slot='media']) { width: 32px; height: 32px; }
         ::slotted(cm-thumbnail[slot='media']) { --cm-thumbnail-size: 32px; }
@@ -294,11 +295,11 @@ export class CmResourceList extends CmLocalizedElement {
     base,
     checkboxStyles,
     css`
-      :host { display: block; position: relative; background: var(--cm-bg-surface); border-radius: var(--cm-radius-md); --_pad: var(--cm-space-12); }
+      :host { display: block; position: relative; background: var(--cm-bg-surface); border-radius: var(--cm-radius-md); --_pad: var(--cm-space-12); --_cm-row-inset: var(--_pad); }
       /* Density (since 1.6): the rows are this element's children, so they inherit these. See density.ts. */
       :host([density='compact']) { --cm-resource-row-height: 40px; --cm-resource-row-padding: 4px; --cm-resource-media-size: 32px; }
       :host([density='comfortable']) { --cm-resource-row-height: 56px; --cm-resource-row-padding: 8px; --cm-resource-media-size: 40px; }
-      /* The header row. Rows sit --_pad in from the list's edges and pad space-8 inside (0 on phones), so their 16px
+      /* The header row. Rows pad --_pad + space-8 inside (--_pad on phones), so their 16px
          checkbox starts space-20 from the edge (space-12 on phones, 20px box). The header row runs edge to edge and puts
          its box at the same place. The slotted header and the toolbar share one grid cell: the toolbar lies over the
          header's checkbox column, and while rows are selected it covers the column names. */
@@ -334,7 +335,9 @@ export class CmResourceList extends CmLocalizedElement {
       .top { display: flex; justify-content: flex-end; gap: var(--cm-space-8); padding: var(--cm-space-8) var(--_pad); }
       .top:not(.has) { display: none; }
       .body { position: relative; }
-      .list { padding: 0 var(--_pad) var(--cm-space-8); }
+      /* Rows run edge to edge (1.17.1, owner rule: a hover or selected row is highlighted across the full width). The
+         list's --_pad inset lives in each row's padding instead (--_cm-row-inset), so content stays where it was. */
+      .list { padding: 0 0 var(--cm-space-8); }
       :host([loading]) .list ::slotted(*) { opacity: 0.4; }
       .spinner {
         position: absolute; inset-inline-start: 50%; top: 50%; width: 48px; height: 48px; margin: -24px; border-radius: 50%;
