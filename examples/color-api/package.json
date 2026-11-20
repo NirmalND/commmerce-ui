@@ -1,0 +1,11 @@
+{
+  "name": "commmerce-color-api",
+  "private": true,
+  "type": "module",
+  "description": "Reference server for the Commmerce Colour API (brand and recent colours for cm-color-picker). No dependencies.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=22" }
+}
