@@ -89,6 +89,7 @@ class CmColors {
     required this.countText,
     required this.tabIndicator,
     required this.bgSelected,
+    required this.accountRing,
   });
 
   /// Page background behind cards. Text: text-default, text-tertiary.
@@ -243,6 +244,8 @@ class CmColors {
   final Color tabIndicator;
   /// Background of a selected row in a resource list (since 1.11).
   final Color bgSelected;
+  /// Ring around the account avatar button in the header (since 1.19). The refined look uses the light border.
+  final Color accountRing;
 
   static const light = CmColors(
     bgPage: Color(0xFFF6F6F6),
@@ -320,6 +323,7 @@ class CmColors {
     countText: Color(0xFFFFFFFF),
     tabIndicator: Color(0xFF000000),
     bgSelected: Color(0xFFF7F7F7),
+    accountRing: Color(0xFF000000),
   );
 
   static const dark = CmColors(
@@ -398,6 +402,7 @@ class CmColors {
     countText: Color(0xFFFFFFFF),
     tabIndicator: Color(0xFFF4F4F4),
     bgSelected: Color(0xFF2A2A2A),
+    accountRing: Color(0xFFF4F4F4),
   );
 
   /// Interpolates between two themes (for animated theme changes).
@@ -477,10 +482,11 @@ class CmColors {
       countText: Color.lerp(countText, other.countText, t)!,
       tabIndicator: Color.lerp(tabIndicator, other.tabIndicator, t)!,
       bgSelected: Color.lerp(bgSelected, other.bgSelected, t)!,
+      accountRing: Color.lerp(accountRing, other.accountRing, t)!,
       );
 
   /// A copy with the same values (override fields with named arguments as needed).
-  CmColors copy() => CmColors(bgPage: bgPage, bgSurface: bgSurface, bgFlashBar: bgFlashBar, bgDashboard: bgDashboard, bgAttention: bgAttention, bgInformation: bgInformation, bgSuccess: bgSuccess, bgCritical: bgCritical, bgTag: bgTag, bgIcon: bgIcon, bgHover: bgHover, bgErrorBar: bgErrorBar, bgOfferCard: bgOfferCard, bgInset: bgInset, bgInputFilled: bgInputFilled, iconDefault: iconDefault, iconHover: iconHover, iconSelected: iconSelected, iconResponsiveMenu: iconResponsiveMenu, iconSuccess: iconSuccess, iconCritical: iconCritical, iconRating: iconRating, textDefault: textDefault, textSecondary: textSecondary, textTertiary: textTertiary, textInformation: textInformation, textCritical: textCritical, textSuccess: textSuccess, textAttention: textAttention, textOnDark: textOnDark, textOnDarkSecondary: textOnDarkSecondary, textSpeciality: textSpeciality, textCounter: textCounter, borderDefault: borderDefault, borderStrong: borderStrong, borderInput: borderInput, actionPrimary: actionPrimary, actionPrimaryHover: actionPrimaryHover, actionPrimaryText: actionPrimaryText, actionDisabled: actionDisabled, actionDisabledText: actionDisabledText, textSpecialityOnDark: textSpecialityOnDark, borderCritical: borderCritical, borderCard: borderCard, gray1000: gray1000, gray700: gray700, gray600: gray600, gray500: gray500, gray400: gray400, gray300: gray300, gray100: gray100, gray50: gray50, gray900: gray900, gray800: gray800, bgPanelHeader: bgPanelHeader, borderSubtle: borderSubtle, toggleOn: toggleOn, toggleOff: toggleOff, avatarBg: avatarBg, navActive: navActive, navDivider: navDivider, navBadge: navBadge, thumbBg: thumbBg, overlay: overlay, bgInformationSoft: bgInformationSoft, bgSuccessSoft: bgSuccessSoft, bgAttentionSoft: bgAttentionSoft, accent: accent, accentSoft: accentSoft, accentText: accentText, textOnAccent: textOnAccent, countBg: countBg, countText: countText, tabIndicator: tabIndicator, bgSelected: bgSelected);
+  CmColors copy() => CmColors(bgPage: bgPage, bgSurface: bgSurface, bgFlashBar: bgFlashBar, bgDashboard: bgDashboard, bgAttention: bgAttention, bgInformation: bgInformation, bgSuccess: bgSuccess, bgCritical: bgCritical, bgTag: bgTag, bgIcon: bgIcon, bgHover: bgHover, bgErrorBar: bgErrorBar, bgOfferCard: bgOfferCard, bgInset: bgInset, bgInputFilled: bgInputFilled, iconDefault: iconDefault, iconHover: iconHover, iconSelected: iconSelected, iconResponsiveMenu: iconResponsiveMenu, iconSuccess: iconSuccess, iconCritical: iconCritical, iconRating: iconRating, textDefault: textDefault, textSecondary: textSecondary, textTertiary: textTertiary, textInformation: textInformation, textCritical: textCritical, textSuccess: textSuccess, textAttention: textAttention, textOnDark: textOnDark, textOnDarkSecondary: textOnDarkSecondary, textSpeciality: textSpeciality, textCounter: textCounter, borderDefault: borderDefault, borderStrong: borderStrong, borderInput: borderInput, actionPrimary: actionPrimary, actionPrimaryHover: actionPrimaryHover, actionPrimaryText: actionPrimaryText, actionDisabled: actionDisabled, actionDisabledText: actionDisabledText, textSpecialityOnDark: textSpecialityOnDark, borderCritical: borderCritical, borderCard: borderCard, gray1000: gray1000, gray700: gray700, gray600: gray600, gray500: gray500, gray400: gray400, gray300: gray300, gray100: gray100, gray50: gray50, gray900: gray900, gray800: gray800, bgPanelHeader: bgPanelHeader, borderSubtle: borderSubtle, toggleOn: toggleOn, toggleOff: toggleOff, avatarBg: avatarBg, navActive: navActive, navDivider: navDivider, navBadge: navBadge, thumbBg: thumbBg, overlay: overlay, bgInformationSoft: bgInformationSoft, bgSuccessSoft: bgSuccessSoft, bgAttentionSoft: bgAttentionSoft, accent: accent, accentSoft: accentSoft, accentText: accentText, textOnAccent: textOnAccent, countBg: countBg, countText: countText, tabIndicator: tabIndicator, bgSelected: bgSelected, accountRing: accountRing);
 }
 
 /// Spacing on the 4px grid (docs Foundations > Scale): s4 to s64. s10, s15, s22 and s30 are deprecated since 1.5.

@@ -11,6 +11,7 @@ const Map<String, String> cmIconPaths = {
   'search': 'M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4',
   'filter': 'M4 7h16M7 12h10M10 17h4',
   'edit': 'M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4',
+  'eyedropper': 'M14 6l4 4M12.5 7.5l4 4M15.5 3.5a2.1 2.1 0 013 0l2 2a2.1 2.1 0 010 3L18 11l-5-5 2.5-2.5zM14 9.5L5.5 18v2h2L16 11.5',
   'trash': 'M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13M10 11v6M14 11v6',
   'arrow-up-right': 'M7 17L17 7M9 7h8v8',
   'calendar': 'M5 6h14v14H5zM5 10h14M9 4v4M15 4v4',
@@ -93,6 +94,7 @@ abstract final class CmIcons {
   static const String search = 'search';
   static const String filter = 'filter';
   static const String edit = 'edit';
+  static const String eyedropper = 'eyedropper';
   static const String trash = 'trash';
   static const String arrowUpRight = 'arrow-up-right';
   static const String calendar = 'calendar';

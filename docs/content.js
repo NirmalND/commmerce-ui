@@ -57,6 +57,12 @@ export const components = [
   <cm-button icon-only icon="edit" label="Edit product" size="slim"></cm-button>
   <cm-button icon-only icon="bell" label="Notifications" size="large"></cm-button>
 </div>` },
+      { title: 'Tertiary', description: '`variant="tertiary"` (since 1.19) has no fill and no outline until hovered. Use it for icon buttons in the header bar (refresh, notifications) and in a board column heading, where a row of outlined boxes looks heavy, above all on phones. Not for the main action of a page or a form.',
+        html: `<div class="row">
+  <cm-button variant="tertiary" icon-only icon="refresh" label="Refresh this page"></cm-button>
+  <cm-button variant="tertiary" icon-only icon="bell" label="Notifications" count="3"></cm-button>
+  <cm-button variant="tertiary" icon-only icon="plus" label="Add lead" size="slim"></cm-button>
+</div>` },
       { title: 'Count', description: '`count` adds a small counter, e.g. unread notifications. It is hidden at 0 and shows "99+" above 99. Screen readers hear the exact number as part of the name: "Notifications, 3 unread". When the count is not "unread" (tasks due, items waiting), change the wording with `strings` (keys `labelWithCount` for icon-only, `count` for text buttons) or `setStrings()`.',
         html: `<div class="row">
   <cm-button icon-only icon="bell" label="Notifications" count="3" size="large"></cm-button>

@@ -3,6 +3,10 @@
 The Flutter package shares its version number with the Commmerce UI web packages. Full release notes:
 https://commmerce.com/blog/commmerceui/#releases
 
+## 1.19.0
+
+* Token `accountRing` and the `eyedropper` icon (generated from the web packages). No widget changes: the web release changes the docs frame, phone navigation marking and adds a tertiary button.
+
 ## 1.18.0
 
 * `CmDateRangePicker(variant: CmDateRangeVariant.report)`: a summary field (preset chip and range) and a report popup with the presets and their dates (Custom first), typed start and end boxes, months listed one under another, and Cancel and Apply with the day count. `CmDateRangePreset.reportVariant` is its default list.

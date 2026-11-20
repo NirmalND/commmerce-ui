@@ -1,6 +1,13 @@
 // Release notes, newest first. Cloud build sessions add an entry here when a batch ships
 // (an <h2 id="vX-Y-Z"> heading and a list). Plain HTML; internal links use href="#/path".
 export const releaseNotes = `
+  <h2 id="v1-19-0">v1.19.0</h2>
+  <ul>
+    <li><strong>One menu everywhere.</strong> These docs now run in the Commmerce frame, the same one the CRM uses: <a href="#/components/app-frame">app frame</a> with <code>panel</code>, <a href="#/components/header-bar">header bar</a> with <a href="#/components/global-search">global search</a>, and the black <a href="#/components/side-navigation">side navigation</a> card (collapsible); <a href="#/components/bottom-navigation">bottom navigation</a> and the <a href="#/components/mobile-menu">mobile menu</a> on phones.</li>
+    <li><a href="#/components/bottom-navigation">Bottom navigation</a>: the current tab has a bold label and a tinted pill behind its icon. <a href="#/components/mobile-menu">Mobile menu</a>: the current row is tinted and bold. Before, only the icon colour changed in the bottom navigation and the mobile menu did not mark the current row; products had to patch both.</li>
+    <li><a href="#/components/button">Button</a>: <code>variant="tertiary"</code> (new): no fill and no outline until hovered, for icon buttons in a header bar or a board column heading.</li>
+    <li><a href="#/components/account-menu">Account menu</a>: the avatar ring takes <code>--cm-account-ring</code> (new token, default <code>--cm-border-strong</code>, so nothing changes). The refined look uses the light border.</li>
+  </ul>
   <h2 id="v1-18-0">v1.18.0</h2>
   <ul>
     <li><a href="#/components/date-range-picker">Date range picker</a>: <code>variant="report"</code> for report and dashboard pages. The field is one button that names the preset and the range ("Last 28 days · 23 Oct – 19 Nov 2026"). The popup lists the presets on the left with their dates under each (Custom first), has typed start and end date boxes, months to scroll through under one weekday row, and Cancel and Apply with the range's length ("28 days"). Without <code>presets</code> it lists a report set. Flutter: <code>CmDateRangePicker(variant: CmDateRangeVariant.report)</code>.</li>
