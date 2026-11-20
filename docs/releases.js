@@ -5,6 +5,7 @@ export const releaseNotes = `
   <ul>
     <li><a href="#/components/date-range-picker">Date range picker</a>: <code>variant="report"</code> for report and dashboard pages. The field is one button that names the preset and the range ("Last 28 days · 23 Oct – 19 Nov 2026"). The popup lists the presets on the left with their dates under each (Custom first), has typed start and end date boxes, months to scroll through under one weekday row, and Cancel and Apply with the range's length ("28 days"). Without <code>presets</code> it lists a report set. Flutter: <code>CmDateRangePicker(variant: CmDateRangeVariant.report)</code>.</li>
     <li>New presets <code>quarter-to-date</code> and <code>last-quarter</code> (Flutter <code>CmDateRangePreset.quarterToDate</code>, <code>lastQuarter</code>).</li>
+    <li>Bun: the packages install with <code>bun add</code> and bundle with <code>bun build</code> without warnings, and Bun keeps only the components you import, as other bundlers already did. The repository can also be developed with Bun (<code>bun install</code>, <code>bun run build</code>, <code>bun run test</code>).</li>
   </ul>
   <h2 id="v1-17-1">v1.17.1</h2>
   <ul>
