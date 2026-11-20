@@ -34,6 +34,7 @@ jobs:
         with: { node-version: 22 }
       - run: npm run lint
       - run: node scripts/check-scale.mjs
+      - run: node scripts/sync-side-effects.mjs --check
       # The Colour API reference server (examples/color-api): node:test, no dependencies, under a second.
       - run: node --test examples/color-api/test/*.test.mjs
 

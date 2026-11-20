@@ -125,6 +125,8 @@ npm run playground   # builds and opens playground/index.html
 npm run docs         # builds and opens the docs site (docs/) on port 4600
 ```
 
+Bun works too: `bun install`, then `bun run build`, `bun run test` and so on. Use `bun run test`, not `bun test`: the tests need Vitest, and `bun test` starts Bun's own test runner.
+
 Rules for components:
 - Style only with `--cm-*` tokens. No raw hex values in components.
 - Every interactive part is keyboard reachable, has a visible focus ring and a correct ARIA role.

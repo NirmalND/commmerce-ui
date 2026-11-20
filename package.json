@@ -9,14 +9,14 @@
     "packages/app-bridge"
   ],
   "scripts": {
-    "build": "npm run build -w @commmerce/tokens && npm run build -w @commmerce/icons && npm run build -w @commmerce/ui && npm run build -w @commmerce/ui-react && npm run build -w @commmerce/app-bridge",
-    "test": "node scripts/check-scale.mjs && npm test -w @commmerce/ui && npm test -w @commmerce/ui-react && npm test -w @commmerce/app-bridge",
+    "build": "node scripts/ws.mjs build tokens icons ui ui-react app-bridge",
+    "test": "node scripts/check-scale.mjs && node scripts/ws.mjs test ui ui-react app-bridge",
     "lint": "npx --yes oxlint@1.90.0 --deny-warnings",
-    "typecheck": "npm run build -w @commmerce/tokens && npm run build -w @commmerce/icons && tsc -p packages/ui/tsconfig.json && tsc --noEmit -p packages/ui-react/tsconfig.json && tsc --noEmit -p packages/app-bridge/tsconfig.json",
+    "typecheck": "node scripts/ws.mjs build tokens icons && tsc -p packages/ui/tsconfig.json && tsc --noEmit -p packages/ui-react/tsconfig.json && tsc --noEmit -p packages/app-bridge/tsconfig.json",
     "playground": "npm run build && npx --yes http-server@14.1.1 . -p 4500 -c-1 -o /playground/",
     "docs:build": "npm run build && node scripts/build-docs.mjs",
     "docs": "npm run docs:build && npx --yes http-server@14.1.1 docs -p 4600 -c-1 -s -o /dev.html",
-    "test:react19": "npm run test:react19 -w @commmerce/ui-react",
+    "test:react19": "node scripts/ws.mjs test:react19 ui-react",
     "test:packages": "node scripts/test-packages.mjs",
     "publish:dry": "node scripts/publish.mjs",
     "publish:npm": "node scripts/publish.mjs --yes",

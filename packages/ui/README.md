@@ -11,6 +11,8 @@ Docs: https://commmerce.com/commmerceui/
 npm install @commmerce/ui @commmerce/tokens
 ```
 
+Using Bun? `bun add @commmerce/ui @commmerce/tokens` works the same, and so does bundling with `bun build`.
+
 ```js
 import '@commmerce/tokens/fonts.css';  // the Poppins typeface (self-hosted, ships with @commmerce/tokens)
 import '@commmerce/tokens/tokens.css';
