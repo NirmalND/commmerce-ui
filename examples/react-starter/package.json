@@ -10,10 +10,10 @@
     "test": "vite build && playwright test"
   },
   "dependencies": {
-    "@commmerce/app-bridge": "1.19.0",
-    "@commmerce/tokens": "1.19.0",
-    "@commmerce/ui": "1.19.0",
-    "@commmerce/ui-react": "1.19.0",
+    "@commmerce/app-bridge": "1.20.0",
+    "@commmerce/tokens": "1.20.0",
+    "@commmerce/ui": "1.20.0",
+    "@commmerce/ui-react": "1.20.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

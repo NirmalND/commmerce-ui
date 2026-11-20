@@ -2,7 +2,7 @@
 // Pinned files never change; raise VERSION after reading the release notes.
 import { mkdir, writeFile } from 'node:fs/promises';
 
-const VERSION = process.env.COMMMERCE_UI_VERSION || '1.19.0';
+const VERSION = process.env.COMMMERCE_UI_VERSION || '1.20.0';
 const BASE = `https://commmerce.com/commmerceui/v/${VERSION}`;
 await mkdir(new URL('./vendor/', import.meta.url), { recursive: true });
 const download = async (file) => {
