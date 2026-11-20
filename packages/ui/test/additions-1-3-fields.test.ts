@@ -1,6 +1,6 @@
 // 1.3 additions for the CRM rebuild (field app): icons, camera capture and the single-photo tile, the colour field.
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
-import { userEvent, server } from 'vitest/browser';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 
@@ -125,13 +125,13 @@ describe('cm-file-upload 1.3: capture and the single-photo tile', () => {
     await settle(el);
     expect(el.files.map((f: File) => f.name)).toEqual(['card2.jpg']);
   });
-  // Skipped in Firefox 157 until issue #2 is fixed (focus return / hover differ there; passes in Chromium and WebKit).
-  it.skipIf(server.browser === 'firefox')('Remove clears the photo, fires change and returns focus to the tile', async () => {
+  it('Remove clears the photo, fires change and returns focus to the tile', async () => {
     const el = await mount<any>('<cm-file-upload variant="photo" label="Shop front photo"></cm-file-upload>');
     el.addFiles([file('a.jpg', 'image/jpeg')]); await settle(el);
     let changes = 0;
     el.addEventListener('change', () => changes++);
-    (el.shadowRoot!.querySelectorAll('.actions button')[1] as HTMLButtonElement).click();
+    // A real click, as a user would: it also gives this test's frame window focus in Firefox (issue #2).
+    await userEvent.click(el.shadowRoot!.querySelectorAll('.actions button')[1] as HTMLButtonElement);
     await settle(el);
     expect(el.files).toEqual([]);
     expect(changes).toBe(1);
