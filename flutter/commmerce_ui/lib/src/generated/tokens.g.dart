@@ -76,6 +76,7 @@ class CmColors {
     required this.navActive,
     required this.navDivider,
     required this.navBadge,
+    required this.navBadgeSoft,
     required this.thumbBg,
     required this.overlay,
     required this.bgInformationSoft,
@@ -218,6 +219,8 @@ class CmColors {
   final Color navDivider;
   /// Count pill in the side navigation. Figma #4B74F8 nudged so white text reaches 4.6:1.
   final Color navBadge;
+  /// Light tint of the Commmerce blue (nav-badge) for selected rows and views in the refined look (since 1.20). Text on it: text-default.
+  final Color navBadgeSoft;
   /// Placeholder behind product thumbnails.
   final Color thumbBg;
   /// Scrim behind side popups and popups.
@@ -236,7 +239,7 @@ class CmColors {
   final Color accentText;
   /// Text and icons on the accent green (since 1.11).
   final Color textOnAccent;
-  /// Unread and count pills on buttons and navigation (since 1.11; was nav-badge). The refined look uses the accent.
+  /// Unread and count pills on buttons and navigation (since 1.11; was nav-badge). Commmerce blue in both looks.
   final Color countBg;
   /// Text on count-bg (since 1.11).
   final Color countText;
@@ -310,6 +313,7 @@ class CmColors {
     navActive: Color(0xFF3B3B3B),
     navDivider: Color(0xFF333333),
     navBadge: Color(0xFF446BEB),
+    navBadgeSoft: Color(0xFFECF0FD),
     thumbBg: Color(0xFFE7E7E7),
     overlay: Color.fromRGBO(0, 0, 0, 0.4),
     bgInformationSoft: Color.fromRGBO(241, 169, 83, 0.16),
@@ -389,6 +393,7 @@ class CmColors {
     navActive: Color(0xFF3B3B3B),
     navDivider: Color(0xFF333333),
     navBadge: Color(0xFF446BEB),
+    navBadgeSoft: Color(0xFF1A2340),
     thumbBg: Color(0xFF2A2A2A),
     overlay: Color.fromRGBO(0, 0, 0, 0.6),
     bgInformationSoft: Color.fromRGBO(241, 169, 83, 0.16),
@@ -469,6 +474,7 @@ class CmColors {
       navActive: Color.lerp(navActive, other.navActive, t)!,
       navDivider: Color.lerp(navDivider, other.navDivider, t)!,
       navBadge: Color.lerp(navBadge, other.navBadge, t)!,
+      navBadgeSoft: Color.lerp(navBadgeSoft, other.navBadgeSoft, t)!,
       thumbBg: Color.lerp(thumbBg, other.thumbBg, t)!,
       overlay: Color.lerp(overlay, other.overlay, t)!,
       bgInformationSoft: Color.lerp(bgInformationSoft, other.bgInformationSoft, t)!,
@@ -486,7 +492,7 @@ class CmColors {
       );
 
   /// A copy with the same values (override fields with named arguments as needed).
-  CmColors copy() => CmColors(bgPage: bgPage, bgSurface: bgSurface, bgFlashBar: bgFlashBar, bgDashboard: bgDashboard, bgAttention: bgAttention, bgInformation: bgInformation, bgSuccess: bgSuccess, bgCritical: bgCritical, bgTag: bgTag, bgIcon: bgIcon, bgHover: bgHover, bgErrorBar: bgErrorBar, bgOfferCard: bgOfferCard, bgInset: bgInset, bgInputFilled: bgInputFilled, iconDefault: iconDefault, iconHover: iconHover, iconSelected: iconSelected, iconResponsiveMenu: iconResponsiveMenu, iconSuccess: iconSuccess, iconCritical: iconCritical, iconRating: iconRating, textDefault: textDefault, textSecondary: textSecondary, textTertiary: textTertiary, textInformation: textInformation, textCritical: textCritical, textSuccess: textSuccess, textAttention: textAttention, textOnDark: textOnDark, textOnDarkSecondary: textOnDarkSecondary, textSpeciality: textSpeciality, textCounter: textCounter, borderDefault: borderDefault, borderStrong: borderStrong, borderInput: borderInput, actionPrimary: actionPrimary, actionPrimaryHover: actionPrimaryHover, actionPrimaryText: actionPrimaryText, actionDisabled: actionDisabled, actionDisabledText: actionDisabledText, textSpecialityOnDark: textSpecialityOnDark, borderCritical: borderCritical, borderCard: borderCard, gray1000: gray1000, gray700: gray700, gray600: gray600, gray500: gray500, gray400: gray400, gray300: gray300, gray100: gray100, gray50: gray50, gray900: gray900, gray800: gray800, bgPanelHeader: bgPanelHeader, borderSubtle: borderSubtle, toggleOn: toggleOn, toggleOff: toggleOff, avatarBg: avatarBg, navActive: navActive, navDivider: navDivider, navBadge: navBadge, thumbBg: thumbBg, overlay: overlay, bgInformationSoft: bgInformationSoft, bgSuccessSoft: bgSuccessSoft, bgAttentionSoft: bgAttentionSoft, accent: accent, accentSoft: accentSoft, accentText: accentText, textOnAccent: textOnAccent, countBg: countBg, countText: countText, tabIndicator: tabIndicator, bgSelected: bgSelected, accountRing: accountRing);
+  CmColors copy() => CmColors(bgPage: bgPage, bgSurface: bgSurface, bgFlashBar: bgFlashBar, bgDashboard: bgDashboard, bgAttention: bgAttention, bgInformation: bgInformation, bgSuccess: bgSuccess, bgCritical: bgCritical, bgTag: bgTag, bgIcon: bgIcon, bgHover: bgHover, bgErrorBar: bgErrorBar, bgOfferCard: bgOfferCard, bgInset: bgInset, bgInputFilled: bgInputFilled, iconDefault: iconDefault, iconHover: iconHover, iconSelected: iconSelected, iconResponsiveMenu: iconResponsiveMenu, iconSuccess: iconSuccess, iconCritical: iconCritical, iconRating: iconRating, textDefault: textDefault, textSecondary: textSecondary, textTertiary: textTertiary, textInformation: textInformation, textCritical: textCritical, textSuccess: textSuccess, textAttention: textAttention, textOnDark: textOnDark, textOnDarkSecondary: textOnDarkSecondary, textSpeciality: textSpeciality, textCounter: textCounter, borderDefault: borderDefault, borderStrong: borderStrong, borderInput: borderInput, actionPrimary: actionPrimary, actionPrimaryHover: actionPrimaryHover, actionPrimaryText: actionPrimaryText, actionDisabled: actionDisabled, actionDisabledText: actionDisabledText, textSpecialityOnDark: textSpecialityOnDark, borderCritical: borderCritical, borderCard: borderCard, gray1000: gray1000, gray700: gray700, gray600: gray600, gray500: gray500, gray400: gray400, gray300: gray300, gray100: gray100, gray50: gray50, gray900: gray900, gray800: gray800, bgPanelHeader: bgPanelHeader, borderSubtle: borderSubtle, toggleOn: toggleOn, toggleOff: toggleOff, avatarBg: avatarBg, navActive: navActive, navDivider: navDivider, navBadge: navBadge, navBadgeSoft: navBadgeSoft, thumbBg: thumbBg, overlay: overlay, bgInformationSoft: bgInformationSoft, bgSuccessSoft: bgSuccessSoft, bgAttentionSoft: bgAttentionSoft, accent: accent, accentSoft: accentSoft, accentText: accentText, textOnAccent: textOnAccent, countBg: countBg, countText: countText, tabIndicator: tabIndicator, bgSelected: bgSelected, accountRing: accountRing);
 }
 
 /// Spacing on the 4px grid (docs Foundations > Scale): s4 to s64. s10, s15, s22 and s30 are deprecated since 1.5.
