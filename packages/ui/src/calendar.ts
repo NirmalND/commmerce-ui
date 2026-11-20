@@ -282,6 +282,11 @@ export interface GridOptions {
   nextLabel: string;
   /** Hides one month button, for two months side by side (the left month keeps "previous", the right one "next"). */
   hideNav?: 'previous' | 'next';
+  /**
+   * `title`: only the month name as a heading, with the weekday names read by screen readers but not shown, for months
+   * listed one under another under one shared weekday row (the date range picker's report layout, 1.18).
+   */
+  head?: 'nav' | 'title';
 }
 
 /**
@@ -321,13 +326,17 @@ export function renderGrid(o: GridOptions): TemplateResult {
   const today = todayISO();
   const prevOff = !!min && endOfMonth(addMonths(first, -1)) < min;
   const nextOff = !!max && addMonths(first, 1) > max;
-  return html`<div class="cal-head">
+  const thead = html`<thead class=${o.head === 'title' ? 'vh-head' : ''}><tr>${order.map((d) => html`<th scope="col" abbr=${fmt.weekdaysLong[d]}><span aria-hidden="true">${fmt.weekdaysShort[d]}</span><span class="vh">${fmt.weekdaysLong[d]}</span></th>`)}</tr></thead>`;
+  const head = o.head === 'title'
+    ? html`<h3 id="${o.id}-month" class="cal-month" part="calendar-month">${fmt.monthYear(month)}</h3>`
+    : html`<div class="cal-head">
       ${o.hideNav === 'previous' ? html`<span class="cal-nav-gap"></span>` : html`<button type="button" class="cal-nav" part="calendar-nav" aria-label=${o.previousLabel} ?disabled=${prevOff} @click=${() => o.onMonth(-1)}><cm-icon name="chevron-left" size="18"></cm-icon></button>`}
       <h2 id="${o.id}-month" class="cal-title" aria-live="polite">${fmt.monthYear(month)}</h2>
       ${o.hideNav === 'next' ? html`<span class="cal-nav-gap"></span>` : html`<button type="button" class="cal-nav" part="calendar-nav" aria-label=${o.nextLabel} ?disabled=${nextOff} @click=${() => o.onMonth(1)}><cm-icon name="chevron-right" size="18"></cm-icon></button>`}
-    </div>
+    </div>`;
+  return html`${head}
     <table role="grid" class="cal-grid" part="calendar" aria-labelledby="${o.id}-month" @keydown=${o.onKey}>
-      <thead><tr>${order.map((d) => html`<th scope="col" abbr=${fmt.weekdaysLong[d]}><span aria-hidden="true">${fmt.weekdaysShort[d]}</span><span class="vh">${fmt.weekdaysLong[d]}</span></th>`)}</tr></thead>
+      ${thead}
       <tbody>${weeks.map((w) => html`<tr>${w.map((d) => {
         if (!d) return html`<td class="empty"></td>`;
         const iso = toISO(d);
@@ -373,6 +382,7 @@ export const calendarStyles = css`
   .day.in-range { background: var(--cm-bg-attention-soft); border-radius: 0; }
   .day.selected, .day.start, .day.end { background: var(--cm-action-primary); color: var(--cm-action-primary-text); }
   .day[aria-disabled='true'] { color: var(--cm-text-secondary); cursor: not-allowed; background: none; text-decoration: line-through; }
+  .vh-head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .vh {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
     clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
@@ -383,7 +393,7 @@ export const calendarStyles = css`
 /** Keeps focus inside an open calendar popover: Tab and Shift+Tab cycle its buttons, presets and the grid. */
 export function trapTab(e: KeyboardEvent, pop: HTMLElement) {
   if (e.key !== 'Tab') return;
-  const stops = [...pop.querySelectorAll<HTMLElement>('button:not([disabled]), [role=grid] td[tabindex="0"]')];
+  const stops = [...pop.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), [role=grid] td[tabindex="0"]')];
   if (!stops.length) return;
   const root = pop.getRootNode() as ShadowRoot;
   const i = stops.indexOf(root.activeElement as HTMLElement);

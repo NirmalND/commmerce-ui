@@ -56,6 +56,10 @@ const strings = defineStrings('dateRangePicker', {
   last12Months: 'Last 12 months',
   thisYear: 'This year',
   lastYear: 'Last year',
+  quarterToDate: 'Quarter to date',
+  lastQuarter: 'Last quarter',
+  /** `variant="report"`: the length of the range in the footer. */
+  dayCount: { one: '{count} day', other: '{count} days' },
   /** The preset that lets people pick their own dates in the calendar. */
   custom: 'Custom',
   /** With `confirm`: the footer buttons, and the footer line while the range is not complete. */
@@ -71,7 +75,7 @@ declare module '../localize.js' { interface CmStrings { dateRangePicker: typeof 
  * it is the "Custom" button that leaves the dates to the calendar (since 1.16).
  */
 export type DateRangePresetKey = 'today' | 'yesterday' | 'this-week' | 'last-week' | 'last-7-days' | 'last-28-days' | 'last-30-days' | 'last-90-days'
-  | 'last-12-months' | 'this-month' | 'last-month' | 'this-year' | 'last-year' | 'custom';
+  | 'last-12-months' | 'this-month' | 'last-month' | 'quarter-to-date' | 'last-quarter' | 'this-year' | 'last-year' | 'custom';
 /** A custom preset: a label and ISO start and end dates. */
 export interface DateRangePreset { label: string; start: string; end: string }
 
@@ -88,6 +92,8 @@ const PRESETS: Record<Exclude<DateRangePresetKey, 'custom'>, [string, (t: Date, 
   'last-12-months': ['Last 12 months', (t) => [addDays(addMonths(t, -12), 1), t]],
   'this-month': ['This month', (t) => [startOfMonth(t), t]],
   'last-month': ['Last month', (t) => [startOfMonth(addMonths(t, -1)), endOfMonth(addMonths(t, -1))]],
+  'quarter-to-date': ['Quarter to date', (t) => [new Date(t.getFullYear(), t.getMonth() - (t.getMonth() % 3), 1), t]],
+  'last-quarter': ['Last quarter', (t) => { const q = new Date(t.getFullYear(), t.getMonth() - (t.getMonth() % 3) - 3, 1); return [q, endOfMonth(addMonths(q, 2))]; }],
   'this-year': ['This year', (t) => [new Date(t.getFullYear(), 0, 1), t]],
   'last-year': ['Last year', (t) => [new Date(t.getFullYear() - 1, 0, 1), new Date(t.getFullYear() - 1, 11, 31)]],
 };
@@ -107,6 +113,10 @@ export function resolvePreset(p: DateRangePresetKey | DateRangePreset, today = n
   const [s, e] = def[1](t, firstDayOfWeek);
   return { label: label?.(presetKey(p as string)) || def[0], start: toISO(s), end: toISO(e) };
 }
+
+/** Presets of `variant="report"` when `presets` is empty. */
+const REPORT_PRESETS: DateRangePresetKey[] = ['custom', 'today', 'yesterday', 'this-week', 'last-7-days', 'last-week', 'last-28-days',
+  'last-30-days', 'this-month', 'last-month', 'last-90-days', 'quarter-to-date', 'this-year'];
 
 /** A preset as the picker lists it: its key (empty for an object preset) and its resolved range. */
 interface ListedPreset extends DateRangePreset { key: string }
@@ -149,6 +159,9 @@ export class CmDateRangePicker extends CmLocalizedElement {
     preset: { reflect: true },
     months: { type: Number, reflect: true },
     confirm: { type: Boolean, reflect: true },
+    variant: { reflect: true },
+    _dStartText: { state: true },
+    _dEndText: { state: true },
     startLabel: { attribute: 'start-label', string: 'start' },
     endLabel: { attribute: 'end-label', string: 'end' },
     required: { type: Boolean, reflect: true },
@@ -216,6 +229,14 @@ export class CmDateRangePicker extends CmLocalizedElement {
    * Without it, choosing a preset or the end date changes the range at once.
    */
   confirm = false;
+  /**
+   * `report` (since 1.18): the layout for report and dashboard pages. The field is one button that shows the preset
+   * and the range ("Last 28 days · 23 Oct – 19 Nov 2026"); the popup has the presets on the left ("Custom" first, each
+   * with its dates), start and end date boxes, months to scroll through, and Cancel and Apply. It always works as with
+   * `confirm`. Without `presets` it lists custom, today, yesterday, this week, last 7 days, last week, last 28 days,
+   * last 30 days, this month, last month, last 90 days, quarter to date and this year.
+   */
+  variant: '' | 'report' = '';
   /** Accessible name of the start input. Default: the built-in string `start` ("Start date"). */
   startLabel!: string;
   /** Accessible name of the end input. Default: the built-in string `end` ("End date"). */
@@ -239,6 +260,9 @@ export class CmDateRangePicker extends CmLocalizedElement {
   _view: Date = startOfMonth(new Date());
   /** With `confirm`: the preset key of the draft range. */
   _draftPreset = '';
+  /** `variant="report"`: the text in the popup's start and end boxes (the draft, or what is being typed). */
+  _dStartText = '';
+  _dEndText = '';
 
   #internals = this.attachInternals();
   #v = new FieldValidity(this, this.#internals);
@@ -250,6 +274,10 @@ export class CmDateRangePicker extends CmLocalizedElement {
   #custom = false;
   #keepText = false;
   #focusGrid = false;
+  /** `variant="report"`: scroll the months so the draft's first month is at the top after the next render. */
+  #scrollMonths = false;
+  get #report() { return this.variant === 'report'; }
+  get #confirming() { return this.confirm || this.#report; }
 
   static styles = [
     base, topLayerStyles, dateFieldStyles, calendarStyles,
@@ -284,6 +312,66 @@ export class CmDateRangePicker extends CmLocalizedElement {
       .act:disabled { opacity: 0.5; cursor: not-allowed; }
       .act:focus-visible { outline: 2px solid var(--cm-border-strong); outline-offset: 2px; }
       @media (pointer: coarse) { .act { min-height: var(--cm-control-height-touch, 44px); } }
+      /* variant="report" (1.18) */
+      .summary {
+        display: flex; align-items: center; gap: var(--cm-space-8); width: 100%; height: var(--_cm-field-h); margin: 0;
+        padding-block: 0; padding-inline: var(--_cm-field-pad) var(--cm-space-8); border: var(--cm-border-1) solid var(--cm-border-input);
+        border-radius: var(--cm-radius-sm); background: var(--cm-bg-surface); color: var(--cm-text-default);
+        font: inherit; font-size: var(--_cm-field-font); text-align: start; cursor: pointer;
+      }
+      .summary:hover { border-color: var(--cm-border-strong); background: var(--cm-bg-surface); }
+      .summary:focus-visible { outline: 2px solid var(--cm-border-strong); outline-offset: 0; }
+      :host([data-cm-invalid]) .summary, :host([error]:not([error=''])) .summary { border-color: var(--cm-border-critical); }
+      :host([disabled]) .summary { background: var(--cm-bg-input-filled); border-color: var(--cm-border-subtle); color: var(--cm-text-secondary); cursor: not-allowed; }
+      .chip {
+        flex: none; padding: 2px var(--cm-space-8); border-radius: var(--cm-radius-xs); background: var(--cm-bg-tag);
+        font-size: var(--cm-font-size-12); line-height: var(--cm-line-height-12, 16px); font-weight: 500; white-space: nowrap;
+      }
+      .range { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-variant-numeric: tabular-nums; }
+      .range.empty { color: var(--cm-text-tertiary); }
+      .summary cm-icon { flex: none; color: var(--cm-icon-selected); }
+      .pop.r-pop { padding: 0; }
+      /* The popup may be given a max-height (little room above and below the field): the months list shrinks first and the footer stays inside. */
+      .pop.r-pop:not([hidden]) { display: flex; flex-direction: column; }
+      .r-body { display: flex; flex: 1 1 auto; min-height: 0; }
+      .r-foot { flex: none; }
+      .r-presets {
+        width: 208px; max-height: 456px; min-height: 0; overflow-y: auto; padding: var(--cm-space-8); gap: 0; flex: none;
+        border-inline-end: var(--cm-border-1) solid var(--cm-border-subtle);
+      }
+      .r-presets .preset { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: var(--cm-space-8) var(--cm-space-12); }
+      .r-presets li.custom { padding-block-end: var(--cm-space-8); margin-block-end: var(--cm-space-8); border-block-end: var(--cm-border-1) solid var(--cm-border-subtle); }
+      .p-span { font-size: var(--cm-font-size-12); line-height: var(--cm-line-height-12, 16px); color: var(--cm-text-tertiary); font-variant-numeric: tabular-nums; }
+      .r-presets .preset[aria-pressed='true'] { background: var(--cm-bg-selected); color: var(--cm-text-default); font-weight: 600; }
+      .r-presets .preset[aria-pressed='true']::before {
+        content: ''; position: absolute; inset-block: var(--cm-space-8); inset-inline-start: 0; width: 3px; border-radius: var(--cm-radius-full);
+        background: var(--cm-tab-indicator);
+      }
+      .r-presets .preset[aria-pressed='true'] .p-span { font-weight: 400; color: var(--cm-text-default); }
+      .r-main { display: flex; flex-direction: column; min-height: 0; width: 312px; padding: var(--cm-space-16) var(--cm-space-16) 0; }
+      .r-inputs { display: flex; align-items: flex-end; gap: var(--cm-space-8); }
+      .r-in { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--cm-space-4); font-size: var(--cm-font-size-12); line-height: var(--cm-line-height-12, 16px); color: var(--cm-text-secondary); }
+      .r-in input {
+        flex: none; width: 100%; height: var(--cm-control-height-md, 36px); padding: 0 var(--cm-space-8); border: var(--cm-border-1) solid var(--cm-border-input);
+        border-radius: var(--cm-radius-sm); background: var(--cm-bg-surface); font-size: var(--cm-font-size-14); font-variant-numeric: tabular-nums;
+      }
+      .r-in input:focus { border-color: var(--cm-border-strong); box-shadow: 0 0 0 1px var(--cm-border-strong); }
+      .r-in input[aria-invalid='true'] { border-color: var(--cm-border-critical); }
+      .r-inputs .sep { padding-block-end: var(--cm-space-8); }
+      .r-months { position: relative; flex: 1 1 312px; min-height: 120px; overflow-y: auto; overscroll-behavior: contain; margin-block-start: var(--cm-space-12); }
+      .r-week {
+        position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: repeat(7, 1fr); height: 32px; align-items: center;
+        background: var(--cm-bg-surface); border-block-end: var(--cm-border-1) solid var(--cm-border-subtle);
+        font-size: var(--cm-font-size-12); color: var(--cm-text-tertiary); text-align: center;
+      }
+      .cal-month {
+        position: sticky; top: 32px; z-index: 1; margin: 0; padding: var(--cm-space-12) var(--cm-space-4) var(--cm-space-4);
+        background: var(--cm-bg-surface); font-size: var(--cm-font-size-13); line-height: var(--cm-line-height-13, 18px); font-weight: 600;
+      }
+      .r-months .day, .r-months .empty { height: 36px; }
+      .r-foot { margin: 0; padding: var(--cm-space-12) var(--cm-space-16); }
+      .count { color: var(--cm-text-tertiary); }
+      .status.vh { margin: 0; }
       .status { margin: var(--cm-space-8) 0 0; font-size: var(--cm-type-body-xs-size); line-height: var(--cm-type-body-xs-line-height); color: var(--cm-text-tertiary); }
       @media (max-width: 640px) {
         .body { flex-direction: column; }
@@ -291,6 +379,16 @@ export class CmDateRangePicker extends CmLocalizedElement {
         .presets li { flex: 0 0 auto; }
         .preset { width: auto; border: var(--cm-border-1) solid var(--cm-border-subtle); border-radius: var(--cm-radius-full); min-height: 32px; }
         .draft { flex-basis: 100%; }
+        .r-body { flex-direction: column; }
+        .r-presets { width: auto; max-height: none; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: var(--cm-space-8) var(--cm-space-12); border-inline-end: 0; }
+        .r-presets li.custom { padding: 0; margin: 0; border: 0; }
+        .r-presets .preset { padding: var(--cm-space-4) var(--cm-space-12); white-space: nowrap; }
+        .r-presets .preset[aria-pressed='true'] { background: var(--cm-action-primary); color: var(--cm-action-primary-text); }
+        .r-presets .preset[aria-pressed='true']::before, .p-span { display: none; }
+        .r-main { width: auto; padding-block-start: var(--cm-space-4); }
+        .r-body { overflow-y: auto; }
+        .r-presets { flex: none; }
+        .r-months { flex-basis: min(312px, 40vh); }
       }
     `,
   ];
@@ -343,7 +441,15 @@ export class CmDateRangePicker extends CmLocalizedElement {
     this.#show(this._focus);
     this.#picking = 'start';
     this.#focusGrid = true;
+    this.#scrollMonths = true;
+    this.#syncDraftText();
     this.open = true;
+  }
+
+  /** `variant="report"`: the popup's date boxes show the draft. */
+  #syncDraftText() {
+    this._dStartText = this.#format(this._draftStart);
+    this._dEndText = this.#format(this._draftEnd);
   }
 
   /** Months side by side: `months` (1 or 2), one on phones. */
@@ -360,13 +466,17 @@ export class CmDateRangePicker extends CmLocalizedElement {
   }
 
   /** The listed presets, resolved relative to today, without `custom`. */
+  get #presetList(): Array<DateRangePresetKey | DateRangePreset> {
+    const list = asList(this.presets);
+    return list.length || !this.#report ? list : REPORT_PRESETS;
+  }
   get #listed(): ListedPreset[] {
-    return asList(this.presets).flatMap((p) => {
+    return this.#presetList.flatMap((p) => {
       const r = resolvePreset(p, new Date(), (k) => this.t(k), this.#firstDay);
       return r ? [{ ...r, key: typeof p === 'string' ? p : '' }] : [];
     });
   }
-  get #hasCustom() { return asList(this.presets).includes('custom'); }
+  get #hasCustom() { return this.#presetList.includes('custom'); }
   /** Closes the calendar without changing the range. */
   close() { this.open = false; }
 
@@ -414,8 +524,10 @@ export class CmDateRangePicker extends CmLocalizedElement {
     if (this.name || this.startName) { if (s) fd.append(this.startName || `${this.name}-start`, this.start); }
     if (this.name || this.endName) { if (e) fd.append(this.endName || `${this.name}-end`, this.end); }
     this.#internals.setFormValue(s || e ? fd : null, `${this.start}/${this.end}`);
-    const inputs = this.renderRoot.querySelectorAll<HTMLInputElement>('input');
-    const [inS, inE] = [inputs[0] ?? undefined, inputs[1] ?? undefined];
+    // The report layout has no boxes in the field: its messages point at the field's button.
+    const inputs = this.#report ? [] : [...this.renderRoot.querySelectorAll<HTMLInputElement>('.box input')];
+    const anchor = this.renderRoot.querySelector<HTMLElement>('.trigger') ?? undefined;
+    const [inS, inE] = [inputs[0] ?? anchor, inputs[1] ?? anchor];
     const fmt = this.#fmt;
     const min = fromISO(this.min), max = fromISO(this.max);
     if (this.error) this.#internals.setValidity({ customError: true }, this.error, inS);
@@ -431,6 +543,14 @@ export class CmDateRangePicker extends CmLocalizedElement {
     if (this.open && this.#focusGrid) {
       this.#focusGrid = false;
       this.renderRoot.querySelector<HTMLElement>('td[tabindex="0"]')?.focus();
+    }
+    if (this.open && this.#scrollMonths) {
+      this.#scrollMonths = false;
+      const list = this.renderRoot.querySelector<HTMLElement>('.r-months');
+      const first = fromISO(this._draftStart) ?? this._focus;
+      const month = list?.querySelector<HTMLElement>(`[data-month="${toISO(startOfMonth(first)).slice(0, 7)}"]`);
+      const week = list?.querySelector<HTMLElement>('.r-week');
+      if (list && month) list.scrollTop = month.offsetTop - (week?.offsetHeight ?? 0);
     }
   }
 
@@ -465,24 +585,28 @@ export class CmDateRangePicker extends CmLocalizedElement {
     if (this.#picking === 'start' || !this._draftStart || iso < this._draftStart) {
       this._draftStart = iso; this._draftEnd = ''; this.#picking = 'end';
       this._focus = d; this.#focusGrid = true;
+      this.#syncDraftText();
       return;
     }
     this._draftEnd = iso;
+    this.#syncDraftText();
     this.#picking = 'start';
-    if (this.confirm) { this._focus = d; this.#focusGrid = true; return; }
+    if (this.#confirming) { this._focus = d; this.#focusGrid = true; return; }
     this.open = false;
     this.#setRange(this._draftStart, iso, '');
     this.#focusTrigger();
   }
 
   #applyPreset(p: ListedPreset) {
-    if (this.confirm) {
+    if (this.#confirming) {
       // A draft: shown in the calendar and the footer until Apply.
       this._draftStart = p.start; this._draftEnd = p.end; this._draftPreset = p.key; this.#custom = false;
       this.#picking = 'start';
       const end = fromISO(p.end)!;
       this._focus = clamp(end, fromISO(this.min), fromISO(this.max));
       this.#show(fromISO(p.start)!); this.#show(end);
+      this.#scrollMonths = true;
+      this.#syncDraftText();
       return;
     }
     this.open = false;
@@ -507,6 +631,31 @@ export class CmDateRangePicker extends CmLocalizedElement {
     this.#focusTrigger();
   }
 
+  /** `variant="report"`: reads a typed start or end date into the draft. Text that isn't a date stays, marked invalid. */
+  #commitDraftText(which: 'start' | 'end') {
+    const text = (which === 'start' ? this._dStartText : this._dEndText).trim();
+    const iso = text ? parseDate(text, this.#fmt) : '';
+    if (iso === null || (iso && this.isUnavailable(iso))) { this.requestUpdate(); return; }
+    this.#custom = true; this._draftPreset = '';
+    if (which === 'start') {
+      this._draftStart = iso;
+      if (iso && this._draftEnd && this._draftEnd < iso) this._draftEnd = '';
+    } else if (iso && this._draftStart && iso < this._draftStart) {
+      this._draftEnd = this._draftStart; this._draftStart = iso;
+    } else this._draftEnd = iso;
+    this.#picking = this._draftStart && !this._draftEnd ? 'end' : 'start';
+    const d = fromISO(iso);
+    if (d) { this._focus = d; this.#scrollMonths = which === 'start'; }
+    this.#syncDraftText();
+  }
+  /** A box of the report popup holds text that isn't an available date. */
+  #draftBad(which: 'start' | 'end') {
+    const text = (which === 'start' ? this._dStartText : this._dEndText).trim();
+    if (!text) return false;
+    const iso = parseDate(text, this.#fmt);
+    return !iso || this.isUnavailable(iso);
+  }
+
   #cancel() {
     this.open = false;
     this.#focusTrigger();
@@ -517,7 +666,7 @@ export class CmDateRangePicker extends CmLocalizedElement {
   #toggle = () => {
     if (this.disabled) return;
     if (this.open) this.open = false;
-    else { this.#commitText('start'); this.#commitText('end'); this.show(); }
+    else { if (!this.#report) { this.#commitText('start'); this.#commitText('end'); } this.show(); }
   };
 
   #onInputKey = (which: 'start' | 'end') => (e: KeyboardEvent) => {
@@ -557,6 +706,105 @@ export class CmDateRangePicker extends CmLocalizedElement {
     return '';
   }
 
+  /** A range as short text, e.g. "23 Oct – 19 Nov 2026", or one day when start and end are the same. */
+  #span(start: string, end: string, year: boolean) {
+    const a = fromISO(start), b = fromISO(end);
+    if (!a) return '';
+    const f = new Intl.DateTimeFormat(this.#locale, { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}) });
+    const range = (f as Intl.DateTimeFormat & { formatRange?: (x: Date, y: Date) => string }).formatRange;
+    const out = !b || +a === +b ? f.format(a) : range ? range.call(f, a, b) : `${f.format(a)} – ${f.format(b)}`;
+    return out.replace(/[\u202f\u2009\u00a0]/g, ' ');
+  }
+
+  /** `variant="report"`: the months listed, a year before the range (or today) to two months after, within min and max. */
+  get #reportMonths(): Date[] {
+    const points = [new Date(), fromISO(this._draftStart), fromISO(this._draftEnd), this._focus].filter((d): d is Date => !!d).map(Number);
+    let first = addMonths(startOfMonth(new Date(Math.min(...points))), -12);
+    let last = addMonths(startOfMonth(new Date(Math.max(...points))), 2);
+    const min = fromISO(this.min), max = fromISO(this.max);
+    if (min && startOfMonth(min) > first) first = startOfMonth(min);
+    if (max && startOfMonth(max) < last) last = startOfMonth(max);
+    if (first > last) first = last;
+    const out: Date[] = [];
+    for (let m = first; m <= last && out.length < 600; m = addMonths(m, 1)) out.push(m);
+    return out;
+  }
+
+  #renderReport(name: string, message: string, described: string) {
+    const fmt = this.#fmt;
+    const s = fromISO(this.start), e = fromISO(this.end);
+    const presets = this.open ? this.#listed : [];
+    const [rs, re, key] = [this._draftStart, this._draftEnd, this._draftPreset];
+    const keyed = !this.#custom && !!key && presets.some((p) => p.key === key);
+    const pressed = (p: ListedPreset) => !this.#custom && (keyed ? p.key === key : p.start === rs && p.end === re);
+    const customPressed = this.#custom || (!presets.some(pressed) && !!(rs || re));
+    const thisYear = new Date().getFullYear();
+    const presetLabel = this.preset && this.preset !== 'custom'
+      ? resolvePreset(this.preset as DateRangePresetKey, new Date(), (k) => this.t(k), this.#firstDay)?.label ?? ''
+      : s && e && this.#hasCustom ? this.t('custom') : '';
+    const range = s && e ? this.#span(this.start, this.end, true) : '';
+    const order = Array.from({ length: 7 }, (_, i) => (i + this.#firstDay) % 7);
+    const ds = fromISO(rs), de = fromISO(re);
+    const days = ds && de ? Math.round((+de - +ds) / 86400000) + 1 : 0;
+    const status = this.#picking === 'end' && rs ? this.t('chooseEnd', { date: fmt.medium(ds!) }) : this.t('chooseStart');
+    const triggerName = s && e ? this.t(name ? 'changeFor' : 'change', { label: name, start: fmt.long(s), end: fmt.long(e) }) : this.t(name ? 'chooseFor' : 'choose', { label: name });
+    const box = (which: 'start' | 'end') => {
+      const bad = this.#draftBad(which);
+      return html`<label class="r-in"><span>${which === 'start' ? this.startLabel || this.t('start') : this.endLabel || this.t('end')}</span>
+        <input id="${this.#id}-d${which}" type="text" autocomplete="off" spellcheck="false" placeholder=${this.#pattern}
+          .value=${live(which === 'start' ? this._dStartText : this._dEndText)} aria-invalid=${bad ? 'true' : nothing}
+          @input=${(ev: Event) => { ev.stopPropagation(); const v = (ev.target as HTMLInputElement).value; if (which === 'start') this._dStartText = v; else this._dEndText = v; }}
+          @change=${(ev: Event) => { ev.stopPropagation(); this.#commitDraftText(which); }}
+          @keydown=${(ev: KeyboardEvent) => { if (ev.key === 'Enter') { ev.preventDefault(); this.#commitDraftText(which); } }} /></label>`;
+    };
+    const presetItem = (p: ListedPreset) => html`<li>
+      <button type="button" class="preset" data-preset=${p.key || nothing} aria-pressed=${pressed(p) ? 'true' : 'false'} @click=${() => this.#applyPreset(p)}>
+        <span class="p-label">${p.label}</span><span class="p-span">${this.#span(p.start, p.end, fromISO(p.start)!.getFullYear() !== thisYear || fromISO(p.end)!.getFullYear() !== thisYear)}</span>
+      </button></li>`;
+    return html`<div class="wrap">
+        <button type="button" class="trigger summary" part="trigger" ?disabled=${this.disabled}
+          aria-label=${presetLabel ? `${presetLabel}, ${triggerName}` : triggerName} aria-describedby=${described || nothing}
+          aria-invalid=${message ? 'true' : nothing}
+          aria-haspopup="dialog" aria-expanded=${this.open ? 'true' : 'false'} aria-controls="${this.#id}-pop" @click=${this.#toggle}>
+          ${presetLabel ? html`<span class="chip">${presetLabel}</span>` : nothing}
+          <span class="range ${range ? '' : 'empty'}">${range || this.t('choose')}</span>
+          <cm-icon name="chevron-down" size="16"></cm-icon>
+        </button>
+        <div class="pop r-pop" id="${this.#id}-pop" part="popover" role="dialog" aria-modal="true" aria-label=${this.t('dialog')}
+          ?hidden=${!this.open} @keydown=${this.#onPopKey}>
+          ${this.open ? html`<div class="r-body">
+            <ul class="presets r-presets" part="presets" aria-label=${this.t('presets')}>
+              ${this.#hasCustom ? html`<li class="custom"><button type="button" class="preset" data-preset="custom" aria-pressed=${customPressed ? 'true' : 'false'}
+                @click=${() => this.#pickCustom()}><span class="p-label">${this.t('custom')}</span></button></li>` : nothing}
+              ${presets.map(presetItem)}
+            </ul>
+            <div class="r-main">
+              <div class="r-inputs">${box('start')}<span class="sep" aria-hidden="true">–</span>${box('end')}</div>
+              <div class="r-months" part="months">
+                <div class="r-week" aria-hidden="true">${order.map((d) => html`<span>${fmt.weekdaysShort[d]}</span>`)}</div>
+                ${this.#reportMonths.map((m) => { const k = toISO(m).slice(0, 7); return html`<div class="r-month" data-month=${k}>${renderGrid({
+                  id: `${this.#id}-${k}`, fmt, firstDay: this.#firstDay, month: m, focus: this._focus, head: 'title',
+                  min: fromISO(this.min), max: fromISO(this.max),
+                  isDisabled: (d) => this.isUnavailable(toISO(d)),
+                  mark: (d) => this.#mark(d),
+                  note: (d) => { const mk = this.#mark(d); return mk === 'start' ? this.t('startNote') : mk === 'end' ? this.t('endNote') : ''; },
+                  onPick: (d) => this.#pick(d), onKey: this.#onGridKey, onMonth: () => {},
+                  previousLabel: this.t('previousMonth'), nextLabel: this.t('nextMonth'),
+                  onHover: (d) => { if (this.#picking === 'end') this._hover = d; },
+                })}</div>`; })}
+              </div>
+              <p class="status vh" aria-live="polite">${status}</p>
+            </div>
+          </div>
+          <div class="foot r-foot" part="footer">
+            <span class="draft">${ds && de ? html`${this.#span(rs, re, true)} <span class="count">· ${this.t('dayCount', { count: days })}</span>` : ds ? `${this.#span(rs, '', true)} –` : this.t('noRange')}</span>
+            <button type="button" class="act" @click=${() => this.#cancel()}>${this.t('cancel')}</button>
+            <button type="button" class="act primary" ?disabled=${!ds || !de || this.#draftBad('start') || this.#draftBad('end')} @click=${() => this.#apply()}>${this.t('apply')}</button>
+          </div>` : nothing}
+        </div>
+      </div>`;
+  }
+
   render() {
     const fmt = this.#fmt;
     const s = fromISO(this.start), e = fromISO(this.end);
@@ -566,7 +814,7 @@ export class CmDateRangePicker extends CmLocalizedElement {
     const name = this.label || hostLabel || '';
     const presets = this.open ? this.#listed : [];
     // The pressed preset: with `confirm` the draft's, else the range's. A key wins over matching dates.
-    const [rs, re, key] = this.confirm ? [this._draftStart, this._draftEnd, this._draftPreset] : [this.start, this.end, this.preset];
+    const [rs, re, key] = this.#confirming ? [this._draftStart, this._draftEnd, this._draftPreset] : [this.start, this.end, this.preset];
     const keyed = !this.#custom && !!key && presets.some((p) => p.key === key);
     const pressed = (p: ListedPreset) => !this.#custom && (keyed ? p.key === key : p.start === rs && p.end === re);
     const customPressed = this.#custom || (!presets.some(pressed) && !!(rs || re));
@@ -605,7 +853,7 @@ export class CmDateRangePicker extends CmLocalizedElement {
       ${this.label
         ? html`<span class="label" id="${this.#id}-l" part="label">${this.label}${this.required ? html`<span class="req" aria-hidden="true">*</span>` : nothing}</span>`
         : nothing}
-      <div class="wrap">
+      ${this.#report ? this.#renderReport(name, message, described) : html`<div class="wrap">
         <div class="box" part="box">
           ${input('start')}<span class="sep" aria-hidden="true">–</span>${input('end')}
           <button type="button" class="trigger" part="trigger" ?disabled=${this.disabled}
@@ -624,7 +872,7 @@ export class CmDateRangePicker extends CmLocalizedElement {
             <div>
               <div class="cals">${Array.from({ length: months }, (_, i) => html`<div class="cal">${grid(i)}</div>`)}</div>
               <p class="status" aria-live="polite">${status}</p>
-              ${this.confirm ? html`<div class="foot" part="footer">
+              ${this.#confirming && !this.#report ? html`<div class="foot" part="footer">
                 <span class="draft">${ds && de ? `${fmt.medium(ds)} – ${fmt.medium(de)}` : ds ? `${fmt.medium(ds)} –` : this.t('noRange')}</span>
                 <button type="button" class="act" @click=${() => this.#cancel()}>${this.t('cancel')}</button>
                 <button type="button" class="act primary" ?disabled=${!ds || !de} @click=${() => this.#apply()}>${this.t('apply')}</button>
@@ -632,7 +880,7 @@ export class CmDateRangePicker extends CmLocalizedElement {
             </div>
           </div>` : nothing}
         </div>
-      </div>
+      </div>`}
       ${message ? html`<p class="error" id="${this.#id}-err" role="alert">${message}</p>` : nothing}
       ${this.helpText ? html`<p class="help" id="${this.#id}-help">${this.helpText}</p>` : nothing}
     </div>`;
