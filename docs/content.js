@@ -2450,7 +2450,7 @@ ${outreachEvents}
       { title: 'Phone: bottom navigation and menu', description: 'The preview is narrower than 1024px, so it shows the phone layout. Press More to open the Mobile menu, and again (or Esc) to close it. The two outer divs only keep the example in its box: in your app, `cm-app-frame` is the top element of the page. The desktop layout is on the [[Admin frame|/patterns/admin-frame]] page.',
         html: `<div style="height:560px;transform:translateZ(0);overflow:hidden;border-radius:12px;--cm-app-frame-height:560px">
 <div style="height:100%;overflow:auto">
-<cm-app-frame menu-item="more">
+<cm-app-frame panel menu-item="more">
   <cm-header-bar slot="header" store="preprod.commmerce.com" user-name="Demo user">
     <img slot="logo" src="assets/logo-placeholder.svg" alt="Store logo" width="190" height="14">
   </cm-header-bar>

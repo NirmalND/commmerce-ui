@@ -617,7 +617,7 @@ render();
 </html>`;
 
 /* Admin frame: cm-app-frame with every part, shown in two real windows (desktop and phone) on its pattern page. */
-export const appFrameHtml = `<cm-app-frame menu-item="more">
+export const appFrameHtml = `<cm-app-frame panel menu-item="more">
   <cm-header-bar slot="header" store="preprod.commmerce.com" balance="₹ 2,312" user-name="Demo user">
     <img slot="logo" src="assets/logo-placeholder.svg" alt="Store logo" width="190" height="14">
     <cm-button slot="actions" size="large">Hire an Expert</cm-button>
@@ -689,7 +689,7 @@ import { AppFrame, HeaderBar, SideNavigation, NavItemElement as NavItem, Page, P
 export function Shell({ children }) {
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('nav-collapsed') === '1');
   return (
-    <AppFrame menuItem="more">
+    <AppFrame menuItem="more" panel>
       <HeaderBar slot="header" store="preprod.commmerce.com" userName="Demo user" />
       <SideNavigation slot="navigation" collapsible collapsed={collapsed}
         onCollapse={(e) => { setCollapsed(e.detail.collapsed); localStorage.setItem('nav-collapsed', e.detail.collapsed ? '1' : '0'); }}>
@@ -770,7 +770,7 @@ export function wirePipelineBoard(root) {
 
 // Record page (1.7): the standard layout of every CRM record (lead, contact, deal, account, ticket) and of order and
 // product detail pages, shown in a real admin frame at desktop and phone width.
-export const recordPageHtml = `<cm-app-frame>
+export const recordPageHtml = `<cm-app-frame panel>
   <cm-header-bar slot="header" store="preprod.commmerce.com" user-name="Ravi Kumar">
     <img slot="logo" src="assets/logo-placeholder.svg" alt="Store logo" width="190" height="14">
   </cm-header-bar>

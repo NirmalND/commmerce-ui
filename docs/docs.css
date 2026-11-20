@@ -84,15 +84,9 @@ p, li { max-width: 72ch; }
 .section-head h2, .why h2, .today h2 { margin: 0 0 var(--cm-space-4); }
 .section-head p { margin: 0; }
 .more { font-weight: 500; white-space: nowrap; }
-.admin-frame { border: 1px solid var(--cm-border-subtle); border-radius: var(--cm-radius-lg); overflow: hidden; background: var(--cm-bg-page); }
-.admin-top { display: flex; align-items: center; gap: var(--cm-space-16); height: calc(var(--cm-space-48) + var(--cm-space-4)); padding: 0 var(--cm-space-20); background: var(--cm-bg-surface); border-bottom: 1px solid var(--cm-border-subtle); }
-.admin-top .logo { height: var(--cm-space-12); }
-.admin-store { margin-left: auto; font-size: var(--cm-font-size-13); padding: var(--cm-space-4) var(--cm-space-12); border: 1px solid var(--cm-border-strong); border-radius: var(--cm-radius-full); }
-.admin-body { display: grid; grid-template-columns: 180px minmax(0, 1fr); }
-.admin-nav { display: flex; flex-direction: column; gap: var(--cm-space-4); padding: var(--cm-space-12) var(--cm-space-8); background: var(--cm-bg-dashboard); }
-.admin-nav span { padding: var(--cm-space-8) var(--cm-space-12); font-size: var(--cm-font-size-14); color: var(--cm-text-on-dark); opacity: .75; border-radius: var(--cm-radius-md); }
-.admin-nav span.on { opacity: 1; background: var(--cm-nav-active); font-weight: 500; }
-.admin-page { min-width: 0; max-height: 640px; overflow: auto; }
+/* Home page: the orders screen in the real admin frame (an iframe as wide as the column). */
+.home-frame iframe { display: block; width: 100%; height: 720px; border: 1px solid var(--cm-border-subtle); border-radius: var(--cm-radius-lg); background: var(--cm-bg-page); }
+@media (max-width: 600px) { .home-frame iframe { height: 640px; } }
 .caption { margin: var(--cm-space-8) 0 0; font-size: var(--cm-font-size-13); line-height: var(--cm-line-height-13); color: var(--cm-text-tertiary); }
 .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--cm-space-24) var(--cm-space-32); margin-top: var(--cm-space-20); }
 .why-grid h3 { margin: 0 0 var(--cm-space-4); font-size: var(--cm-font-size-16); }
@@ -167,6 +161,9 @@ p, li { max-width: 72ch; }
 .ex-stage--inline { margin: var(--cm-space-12) 0; border: 1px solid var(--cm-border-subtle); border-radius: var(--cm-radius-lg); padding: var(--cm-space-32) var(--cm-space-16); }
 .ex-stage--app { padding: 0; display: block; }
 .ex-app { background: var(--cm-bg-page); }
+/* Pattern previews that are loose cards or blocks, not a full page, get space around them and between them. */
+.ex-app:has(> :first-child:is(cm-card, div)) { display: grid; gap: var(--cm-space-16); padding: var(--cm-space-20); }
+@media (max-width: 600px) { .ex-app:has(> :first-child:is(cm-card, div)) { padding: var(--cm-space-16); } }
 .ex-msg { padding: var(--cm-space-12); background: var(--cm-bg-surface); border-bottom: 1px solid var(--cm-border-subtle); }
 .ex-msg cm-banner[hidden] { display: none; }
 .ex-msg:has(cm-banner[hidden]) { display: none; }
@@ -407,7 +404,6 @@ h1 cm-badge { vertical-align: middle; margin-left: var(--cm-space-8); }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   td code { white-space: normal; }
 }
-@media (max-width: 760px) { .admin-body { grid-template-columns: 1fr; } .admin-nav { display: none; } .admin-store { display: none; } }
 @media (max-width: 700px) { .native-row { grid-template-columns: 1fr; } }
 @media (max-width: 600px) {
   .task { grid-template-columns: 1fr; }

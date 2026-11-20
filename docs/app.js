@@ -406,14 +406,8 @@ pages['/'] = () => ({ wide: true, side: false, title: 'Commmerce UI', html: `
       <p class="muted">Live components, not a picture. Switch the status tabs, search, or tick a few orders to see bulk actions.</p></div>
       <a class="more" href="#/patterns/order-list">See the pattern and code →</a>
     </div>
-    <div class="admin-frame" role="group" aria-label="Example: orders screen in the Commmerce admin">
-      <div class="admin-top" aria-hidden="true"><img class="logo logo--light" src="assets/logo-placeholder.svg" alt="" width="132" height="10"><img class="logo logo--dark" src="assets/logo-placeholder-white.svg" alt="" width="132" height="10"><span class="admin-store">Anika's Boutique</span></div>
-      <div class="admin-body">
-        <nav class="admin-nav" aria-hidden="true"><span>Home</span><span class="on">Orders</span><span>Products</span><span>Customers</span><span>Reports</span><span>Apps</span></nav>
-        <div class="admin-page" id="home-orders">${orderListHtml}</div>
-      </div>
-    </div>
-    <p class="caption">The admin header and navigation are drawn here for context. They come from the admin itself; their components are planned and are not for apps.</p>
+    <div class="home-frame"><iframe title="Example: orders screen in the Commmerce admin frame" loading="lazy"></iframe></div>
+    <p class="caption">The orders screen runs inside the real admin frame: <a href="#/components/app-frame">app frame</a> with <code>panel</code>, <a href="#/components/header-bar">header bar</a> and <a href="#/components/side-navigation">side navigation</a>; in a narrow window, <a href="#/components/bottom-navigation">bottom navigation</a> and the More menu. The frame is for Commmerce products; apps get it from the admin.</p>
   </section>
 
   <section class="why" aria-labelledby="why-title">
@@ -442,7 +436,7 @@ pages['/'] = () => ({ wide: true, side: false, title: 'Commmerce UI', html: `
     <p class="muted small">${STABLE ? 'Breaking changes come only in major versions (<a href="#/releases/stability">compatibility policy</a>).' : 'APIs can change between preview releases.'} Pin a version to stay on one, and read the <a href="#/releases">release notes</a> before moving to the next.</p>
   </section>
   <footer class="footer">Commmerce UI is made and maintained by Commmerce. Design source: the Commmerce Design System Figma file. Questions and requests: ${mail()} · <a href="#/support">Support and compatibility</a> · <a href="#/releases">Release notes</a> · <a href="vendor/LICENSE.txt">Licence</a> · <a href="vendor/THIRD_PARTY_NOTICES.txt">Third-party notices</a></footer>`,
-  after(main) { wireOrderList($('#home-orders', main)); } });
+  after(main) { runHomeFrame(main); } });
 
 /* ---- Get started ---- */
 const QUICKSTART = `<!doctype html>
@@ -1904,6 +1898,46 @@ function runFrames(main, f = framesOf({ frames: true })) {
     iframe.srcdoc = doc;
   });
 }
+// Home page: the orders screen in the real admin frame, in a window as wide as the column (wide: side navigation
+// card and panel; narrow: bottom navigation and More menu), still interactive (wireOrderList runs inside it).
+const HOME_FRAME = (siteJs) => `<cm-app-frame panel menu-item="more">
+  <cm-header-bar slot="header" store="Anika's Boutique">
+    <img slot="logo" src="assets/logo-placeholder.svg" alt="Store logo" width="190" height="14">
+  </cm-header-bar>
+  <cm-side-navigation slot="navigation" label="Admin">
+    <cm-nav-item label="Home" icon="home" href="#home"></cm-nav-item>
+    <cm-nav-item label="Orders" icon="bag" href="#orders" current badge="3"></cm-nav-item>
+    <cm-nav-item label="Products" icon="box" href="#products"></cm-nav-item>
+    <cm-nav-item label="Customers" icon="users" href="#customers"></cm-nav-item>
+    <cm-nav-item label="Reports" icon="chart" href="#reports"></cm-nav-item>
+    <cm-nav-item label="Apps" icon="apps" href="#apps"></cm-nav-item>
+  </cm-side-navigation>
+  <div id="home-orders">${orderListHtml}</div>
+  <cm-bottom-navigation slot="bottom-navigation" label="Admin">
+    <cm-nav-item label="Home" icon="home" href="#home"></cm-nav-item>
+    <cm-nav-item label="Orders" icon="bag" href="#orders" current></cm-nav-item>
+    <cm-nav-item label="Products" icon="box" href="#products"></cm-nav-item>
+    <cm-nav-item label="Customers" icon="users" href="#customers"></cm-nav-item>
+    <cm-nav-item label="More" icon="menu" value="more"></cm-nav-item>
+  </cm-bottom-navigation>
+  <cm-mobile-menu slot="mobile-menu" label="Admin" store="Anika's Boutique">
+    <cm-nav-item label="">
+      <cm-nav-item label="Reports" icon="chart" href="#reports"></cm-nav-item>
+      <cm-nav-item label="Apps" icon="apps" href="#apps"></cm-nav-item>
+    </cm-nav-item>
+  </cm-mobile-menu>
+</cm-app-frame>
+<script type="module">
+  import { wireOrderList } from '${siteJs}';
+  wireOrderList(document.getElementById('home-orders'));
+  // Menu links stay on this preview.
+  document.addEventListener('cm-navigate', (e) => { if (e.detail?.value !== 'more') e.preventDefault(); });
+</script>`;
+function runHomeFrame(main) {
+  const iframe = main.querySelector('.home-frame iframe');
+  if (!iframe) return;
+  iframe.srcdoc = frameDoc(HOME_FRAME(asset('site.js')), { font: asset('vendor/fonts.css'), css: asset('vendor/tokens.css'), js: asset('vendor/cdn.js') }, effectiveTheme());
+}
 const KIND = { example: ['Working implementation', 'success'], guidance: ['Guidance', 'neutral'] };
 // One sentence per pattern saying what it is. "Only Ready components" is checked against the component list.
 const kindLine = (p) => {
@@ -2413,7 +2447,19 @@ const frame = $('#docs-frame'), sideNav = $('#sidenav'), bottomNav = $('#bottomn
 const SECTION_ICONS = { start: 'rocket', apps: 'apps', components: 'box', patterns: 'book', foundations: 'eyedropper', icons: 'image', releases: 'tag' };
 const NAV_PREF = 'cm-docs-nav-collapsed';
 try { sideNav.collapsed = localStorage.getItem(NAV_PREF) === '1'; } catch {}
-const pageItem = (p, path) => ({ label: p.title, href: `#${p.path}`, value: p.path, current: p.path === path || undefined, badge: p.status ? STATUS[p.status].label : undefined });
+// Menu labels: the side navigation is 220px wide, so a page whose title is longer than about 18 characters gets a
+// short label here. The page itself, breadcrumbs and search keep the full title. scripts/check-responsive.mjs fails
+// on a menu label over 20 characters.
+const MENU_LABEL = {
+  '/start/install': 'Install', '/start/frameworks': 'Other frameworks',
+  '/apps': 'How apps run', '/apps/native': 'Native apps', '/apps/guidelines': 'Design guidelines', '/apps/review-checklist': 'Review checklist',
+  '/patterns/admin-frame': 'Admin frame', '/patterns/admin-dashboard': 'Dashboard', '/patterns/order-list': 'Lists',
+  '/patterns/product-editor': 'Product editor', '/patterns/states': 'States', '/patterns/pipeline-board': 'Board or list',
+  '/patterns/pick-record': 'Pick a record', '/patterns/inventory-fulfilment': 'Inventory states', '/patterns/search-filter-sort': 'Search and filter',
+  '/patterns/undo-instead-of-confirm': 'Undo', '/patterns/confirm-delete': 'Confirm delete', '/patterns/unsaved-changes': 'Unsaved changes',
+  '/patterns/app-layout': 'App layout', '/foundations/localisation': 'Localisation', '/releases/stability': 'Versioning', '/support': 'Support',
+};
+const pageItem = (p, path) => ({ label: MENU_LABEL[p.path] ?? p.title, href: `#${p.path}`, value: p.path, current: p.path === path || undefined, badge: p.status ? STATUS[p.status].label : undefined });
 function renderNav(section, path) {
   sideNav.items = [
     { label: 'Home', icon: 'home', href: '#/', value: '/', current: path === '/' || undefined },

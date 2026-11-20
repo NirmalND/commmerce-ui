@@ -32,6 +32,12 @@ async function collectRoutes(browser) {
     const walk = (items) => items.flatMap((it) => [it.href, ...walk(it.items ?? [])]);
     return walk(document.querySelector('#sidenav').items).filter(Boolean).map((h) => h.slice(1));
   });
+  // Menu labels must fit the 220px side navigation on one line (MENU_LABEL in docs/app.js).
+  const long = await page.evaluate(() => {
+    const walk = (items) => items.flatMap((it) => [it.label, ...walk(it.items ?? [])]);
+    return walk(document.querySelector('#sidenav').items).filter((l) => l.length > 20);
+  });
+  if (long.length) { console.error(`Side navigation labels over 20 characters (add a short label to MENU_LABEL in docs/app.js):\n  ${long.join('\n  ')}`); process.exit(1); }
   const routes = new Set(['/', ...hrefs]);
   await page.close();
   return [...routes];
