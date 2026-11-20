@@ -60,4 +60,26 @@ void main() {
       expect(t.takeException(), isNull);
     });
   }
+
+  for (final size in const [Size(1440, 900), Size(390, 844)]) {
+    testWidgets('report variant demo: chip, presets with dates, apply at ${size.width.toInt()}px', (t) async {
+      await page(t, size);
+      await t.scrollUntilVisible(find.text('Analytics period'), 300, scrollable: find.byType(Scrollable).first);
+      await settle(t);
+      final field = find.widgetWithText(CmDateRangePicker, 'Analytics period');
+      expect(find.descendant(of: field, matching: find.text('Last 28 days')), findsOneWidget);
+      await t.tap(find.descendant(of: field, matching: find.byType(InkWell)).first);
+      await settle(t);
+      expect(find.text('Start date'), findsOneWidget);
+      expect(find.text('Custom'), findsWidgets);
+      await t.tap(find.text('Yesterday'));
+      await settle(t);
+      await t.tap(find.text('Apply'));
+      await settle(t);
+      expect(find.text('Apply'), findsNothing);
+      expect(find.textContaining('Kept as "yesterday"'), findsOneWidget);
+      expect(find.descendant(of: field, matching: find.text('Yesterday')), findsOneWidget);
+      expect(t.takeException(), isNull);
+    });
+  }
 }

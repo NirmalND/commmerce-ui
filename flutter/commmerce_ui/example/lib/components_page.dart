@@ -48,6 +48,8 @@ class _ComponentsPageState extends State<ComponentsPage> {
   TimeOfDay? _opens = const TimeOfDay(hour: 9, minute: 0);
   DateTimeRange? _reportRange;
   String _reportPreset = 'last-28-days';
+  DateTimeRange? _analyticsRange;
+  String _analyticsPreset = 'last-28-days';
   List<String> _productTags = ['cotton', 'festive'];
   var _tagOptions = const [
     CmSelectOption('cotton', 'Cotton'),
@@ -171,6 +173,24 @@ class _ComponentsPageState extends State<ComponentsPage> {
               }),
             ),
           ), description: 'Mirrors <cm-date-range-picker months="2" confirm preset="last-28-days">: presets beside two months, Custom, and Apply/Cancel.'),
+          _section('Report date range (report variant)', 'cm-date-range-picker', ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 360),
+            child: CmDateRangePicker(
+              label: 'Analytics period',
+              variant: CmDateRangeVariant.report,
+              value: _analyticsRange,
+              preset: _analyticsPreset,
+              firstDate: DateTime(DateTime.now().year - 2),
+              lastDate: DateUtils.dateOnly(DateTime.now()),
+              helpText: _analyticsPreset.isEmpty ? 'Custom dates' : 'Kept as "$_analyticsPreset"',
+              onChanged: (r) => setState(() => _analyticsRange = r),
+              onPresetChanged: (k) => setState(() {
+                _analyticsPreset = k;
+                if (k.isNotEmpty) _analyticsRange = null;
+              }),
+            ),
+          ), description: 'Mirrors <cm-date-range-picker variant="report" preset="last-28-days">: one button with the preset and the dates; '
+              'presets with their dates, typed start and end dates, months to scroll through, and Cancel/Apply.'),
           _section('Time picker', 'cm-time-picker', Wrap(spacing: CmSpace.s16, runSpacing: CmSpace.s16, children: [
             SizedBox(
               width: 220,

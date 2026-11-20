@@ -301,6 +301,12 @@ class CmStrings {
     this.dateRangeChooseEnd = _dateRangeChooseEnd,
     this.dateRangeStartNote = 'start date',
     this.dateRangeEndNote = 'end date',
+    // 1.18: date range picker `variant: CmDateRangeVariant.report`.
+    this.presetQuarterToDate = 'Quarter to date',
+    this.presetLastQuarter = 'Last quarter',
+    this.dateRangeDayCount = _dateRangeDayCount,
+    this.dateRangeStart = 'Start date',
+    this.dateRangeEnd = 'End date',
     this.timePickerShowTimes = 'Show times',
     this.timePickerTimes = 'Times',
     this.timePickerTimesFor = _timePickerTimesFor,
@@ -330,6 +336,16 @@ class CmStrings {
 
   /// Added to the start and end days' accessible names (web: `dateRangePicker.startNote`, `endNote`).
   final String dateRangeStartNote, dateRangeEndNote;
+
+  /// Quarter presets ([CmDateRangePreset.quarterToDate], [CmDateRangePreset.lastQuarter]; web:
+  /// `dateRangePicker.quarterToDate`, `lastQuarter`). Since 1.18.
+  final String presetQuarterToDate, presetLastQuarter;
+
+  /// The length of the draft range in the footer of the report layout: "28 days" (web: `dateRangePicker.dayCount`). Since 1.18.
+  final String Function(int count) dateRangeDayCount;
+
+  /// Labels of the start and end date boxes in the report layout's popup (web: `dateRangePicker.start`, `end`). Since 1.18.
+  final String dateRangeStart, dateRangeEnd;
 
   /// [CmTimePicker] clock button and list names (web: `timePicker.showTimes`, `times`, `timesFor`). Since 1.16.
   final String timePickerShowTimes, timePickerTimes;
@@ -1034,6 +1050,7 @@ class CmStrings {
   static String _sparklineEmpty(String label) => '$label: no data';
   static String _timeFor(String label) => 'Time for $label';
   static String _dateRangeChooseEnd(String date) => 'Start date $date. Choose the end date.';
+  static String _dateRangeDayCount(int count) => count == 1 ? '1 day' : '$count days';
   static String _timePickerTimesFor(String label) => 'Times for $label';
   static String _timePickerBadInput(String pattern) => 'Enter a time like $pattern.';
   static String _timePickerRangeUnderflow(String time) => 'Choose $time or later.';

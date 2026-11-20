@@ -309,7 +309,7 @@ void main() {
       expect(CmDateRangePreset.byKey('last-28-days'), same(CmDateRangePreset.last28Days));
       expect(CmDateRangePreset.byKey('nope'), isNull);
       expect(CmDateRangePreset.custom.isCustom, isTrue);
-      expect(CmDateRangePreset.all.map((p) => p.key).toSet().length, 14);
+      expect(CmDateRangePreset.all.map((p) => p.key).toSet().length, 16); // 1.18 added quarter-to-date and last-quarter
       expect(CmDateRangePreset.report.last, same(CmDateRangePreset.custom));
     });
   });
