@@ -3,6 +3,10 @@
 The Flutter package shares its version number with the Commmerce UI web packages. Full release notes:
 https://commmerce.com/blog/commmerceui/#releases
 
+## 1.20.1
+
+* No Flutter changes (web fix: link tabs fade the edge when they scroll on phones).
+
 ## 1.20.0
 
 * Token `navBadgeSoft` (light tint of the Commmerce blue, generated from the web tokens). The web refined look now uses blue and Poppins; Flutter has no looks, so widgets don't change.

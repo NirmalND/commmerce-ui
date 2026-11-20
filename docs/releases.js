@@ -1,6 +1,10 @@
 // Release notes, newest first. Cloud build sessions add an entry here when a batch ships
 // (an <h2 id="vX-Y-Z"> heading and a list). Plain HTML; internal links use href="#/path".
 export const releaseNotes = `
+  <h2 id="v1-20-1">v1.20.1</h2>
+  <ul>
+    <li><a href="#/components/link-tabs">Link tabs</a>: when the tabs don't fit (usually on phones), the row now fades at the edge that has more tabs past it, as <a href="#/components/status-tabs">status tabs</a> do, so the last tab no longer looks cut off. The current tab is scrolled into view when the page opens. Nothing changes when the tabs fit.</li>
+  </ul>
   <h2 id="v1-20-0">v1.20.0</h2>
   <ul>
     <li><strong>Refined look in Commmerce blue</strong> (<code>data-cm-look="refined"</code>): count badges, the selected tab line, selected rows (a light blue tint, new token <code>--cm-nav-badge-soft</code>) and the initials avatar now use the Commmerce blue (<code>--cm-nav-badge</code>, <code>#446BEB</code>) instead of the neon green. Interface text is Poppins, like the default look (was Inter), and the greys are neutral at the same lightness (were slightly green-tinted), so contrast is unchanged. The default look does not change. Status colours (success green, critical red) stay as they are.</li>
