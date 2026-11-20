@@ -3,6 +3,11 @@
 The Flutter package shares its version number with the Commmerce UI web packages. Full release notes:
 https://commmerce.com/blog/commmerceui/#releases
 
+## 1.18.0
+
+* `CmDateRangePicker(variant: CmDateRangeVariant.report)`: a summary field (preset chip and range) and a report popup with the presets and their dates (Custom first), typed start and end boxes, months listed one under another, and Cancel and Apply with the day count. `CmDateRangePreset.reportVariant` is its default list.
+* New presets `CmDateRangePreset.quarterToDate` and `lastQuarter`; strings `presetQuarterToDate`, `presetLastQuarter`, `dateRangeDayCount`, `dateRangeStart`, `dateRangeEnd`.
+
 ## 1.17.1
 
 * `CmResourceList`: a selected or hovered row is highlighted across the full width of the list (edge to edge, like

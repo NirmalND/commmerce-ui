@@ -1,6 +1,11 @@
 // Release notes, newest first. Cloud build sessions add an entry here when a batch ships
 // (an <h2 id="vX-Y-Z"> heading and a list). Plain HTML; internal links use href="#/path".
 export const releaseNotes = `
+  <h2 id="v1-18-0">v1.18.0</h2>
+  <ul>
+    <li><a href="#/components/date-range-picker">Date range picker</a>: <code>variant="report"</code> for report and dashboard pages. The field is one button that names the preset and the range ("Last 28 days · 23 Oct – 19 Nov 2026"). The popup lists the presets on the left with their dates under each (Custom first), has typed start and end date boxes, months to scroll through under one weekday row, and Cancel and Apply with the range's length ("28 days"). Without <code>presets</code> it lists a report set. Flutter: <code>CmDateRangePicker(variant: CmDateRangeVariant.report)</code>.</li>
+    <li>New presets <code>quarter-to-date</code> and <code>last-quarter</code> (Flutter <code>CmDateRangePreset.quarterToDate</code>, <code>lastQuarter</code>).</li>
+  </ul>
   <h2 id="v1-17-1">v1.17.1</h2>
   <ul>
     <li><a href="#/components/resource-list">Resource list</a>: a hovered or selected row is now highlighted across the full width of the list, edge to edge like the bulk-action bar above it, and the lines between rows run edge to edge too. Row content, checkboxes and a <code>cm-table-header</code> stay exactly where they were. Flutter <code>CmResourceList</code> matches.</li>
