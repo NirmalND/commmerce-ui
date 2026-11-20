@@ -2522,8 +2522,8 @@ ${outreachEvents}
     <cm-nav-item label="Discounts" href="#discounts"></cm-nav-item>
     <cm-nav-item label="Campaigns" href="#campaigns"></cm-nav-item>
   </cm-nav-item>
-  <cm-nav-item label="Staff Management" icon="staff">
-    <cm-nav-item label="Staff" href="#staff"></cm-nav-item>
+  <cm-nav-item label="Staff" icon="staff">
+    <cm-nav-item label="Team members" href="#staff"></cm-nav-item>
     <cm-nav-item label="Roles" href="#roles"></cm-nav-item>
   </cm-nav-item>
   <cm-nav-item label="Settings" icon="settings">
@@ -2555,7 +2555,7 @@ ${outreachEvents}
     ],
     do: ['Use one side navigation per product, on every page, with the same items in the same order.', 'Mark exactly one item `current`.', 'Use the `cm-navigate` event (and `preventDefault()`) when your app routes on the client.', 'Below 1024px, hide it and show a Bottom navigation with a Mobile menu instead. The [[App frame|/components/app-frame]] does this for you.', 'To let merchants collapse it, add `collapsible` (or your own button that sets `collapsed`), listen for `cm-collapse` and store the choice, so the menu stays collapsed on the next page.', 'Give every item an icon if the menu can be collapsed: without one, the rail shows the label\'s first letter.'],
     dont: ['Don\'t use it inside an app: apps run inside the admin, which already has this menu.', 'Don\'t nest more than one level: deeper items are listed under their section, indented.', 'Don\'t put actions ("Add product") in the menu: it only goes to places.'],
-    content: ['One or two words per item, naming a place: "Orders", "Staff Management".', 'Keep the order merchants know: Dashboard first, Settings last.'],
+    content: ['One or two words per item, naming a place: "Orders", "Staff". Keep each label to about 18 characters so it fits the 220px menu on one line; a longer label wraps and crowds its row.', 'Keep the order merchants know: Dashboard first, Settings last.'],
     a11y: ['A `nav` landmark named "Main" (set `label` to change it). Items are links; the current one has `aria-current="page"`.', 'Sections are buttons with `aria-expanded` and `aria-controls`. Enter or Space opens and closes them; → opens, ← closes or goes back to the section from a sub-item.', '↑/↓ move between visible items, Home/End jump to the first and last. Tab still moves through every item.', 'Collapsed: each item keeps its label as its accessible name (visually hidden, with the badge in brackets) and shows it in a tooltip on hover and keyboard focus. The tooltip only repeats the name, so it is not added as a description. Sub-items are hidden; a section is a button that expands the menu and opens it. ← and → do nothing in the rail. The built-in button is named "Collapse menu" or "Expand menu" (translatable: `collapse`, `expand`).', 'Unselected items use the new `text-on-dark-secondary` token (#B5B5B5, 10:1 on black, AA on the hover fill); icons are decorative.', 'Differs from the live admin screenshot: icons are our line icons (the admin uses filled glyphs); new icons drawn for this: `pos`, `repeat`, `website`, `apps`, `megaphone`, `staff`. The source of truth is the admin screenshot, not the older Figma "Dashboard" page.'],
     related: ['app-frame', 'header-bar', 'bottom-navigation', 'mobile-menu', 'tooltip'],
   },
@@ -2882,10 +2882,13 @@ ${outreachEvents}
     summary: 'A button that opens a short list of actions: row actions, "Add…" menus, or the account menu.',
     lead: 'A white list with 8px corners and a soft shadow (`shadow-md`), 4px under its trigger. Each choice is a 36px row (owner standard, 1.6; `density="compact"` 32px, 44px on touch screens) with 12px side padding, 14px text, an optional 16px icon and an optional `shortcut` hint in 12px grey at the end; the highlighted one is black with white text, a destructive (`critical`) one red on light red. `<cm-menu-item heading>` starts a section with a 12px grey heading (since 1.6). The same rows as the options of Select and Combobox. `<hr>` between `cm-menu-item`s draws a line between groups, and `heading` / `subheading` put a name and email on top (the account menu). The built-in trigger is a button with the label and a chevron, or a ⋮ icon button with `icon-only`; or bring your own with `slot="trigger"`.',
     examples: [
-      { title: 'Row actions', html: `<cm-action-menu icon-only label="Order #1042 actions">
-  <cm-menu-item value="cancel">Cancel shipment</cm-menu-item>
-  <cm-menu-item value="tracking">Change tracking info</cm-menu-item>
-</cm-action-menu>` },
+      { title: 'Row actions', html: `<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:min(100%,440px);padding:8px 8px 8px 16px;background:var(--cm-bg-surface);border:1px solid var(--cm-border-subtle);border-radius:8px">
+  <span><strong>#1042</strong> · Priya Sharma · Rs. 2,340</span>
+  <cm-action-menu icon-only label="Order #1042 actions">
+    <cm-menu-item value="cancel">Cancel shipment</cm-menu-item>
+    <cm-menu-item value="tracking">Change tracking info</cm-menu-item>
+  </cm-action-menu>
+</div>` },
       { title: 'Add menu', html: `<cm-action-menu trigger-label="Add">
   <cm-menu-item icon="box" value="product">Add product</cm-menu-item>
   <cm-menu-item icon="menu" value="category">Add category</cm-menu-item>

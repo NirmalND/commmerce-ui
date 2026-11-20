@@ -244,7 +244,7 @@ export const dashboardHtml = `<cm-header-bar store="preprod.commmerce.com" balan
     <cm-nav-item label="Apps" icon="apps" href="#/components/app-card"></cm-nav-item>
     <cm-nav-item label="Reports" icon="chart" href="#/components/report-tile"></cm-nav-item>
     <cm-nav-item label="Marketing" icon="megaphone"><cm-nav-item label="Discounts" href="#/patterns/admin-dashboard"></cm-nav-item></cm-nav-item>
-    <cm-nav-item label="Staff Management" icon="staff"><cm-nav-item label="Staff" href="#/patterns/admin-dashboard"></cm-nav-item></cm-nav-item>
+    <cm-nav-item label="Staff" icon="staff"><cm-nav-item label="Team members" href="#/patterns/admin-dashboard"></cm-nav-item></cm-nav-item>
     <cm-nav-item label="Settings" icon="settings"><cm-nav-item label="Store details" href="#/patterns/admin-dashboard"></cm-nav-item></cm-nav-item>
   </cm-side-navigation>
   <main style="flex:999 1 420px;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:40px;justify-items:center;padding:40px 20px;background:var(--cm-bg-surface);border-radius:16px">
