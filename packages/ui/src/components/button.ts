@@ -44,8 +44,11 @@ export class CmButton extends CmLocalizedElement {
     tone: { reflect: true },
   };
 
-  /** `primary` = black fill (one per group); `secondary` = white fill with a grey outline, like a field (since 1.5; was a black outline). */
-  variant: 'primary' | 'secondary' = 'secondary';
+  /**
+   * `primary` = black fill (one per group); `secondary` = white fill with a grey outline, like a field (since 1.5; was a black outline);
+   * `tertiary` (since 1.19) = no fill and no outline until hovered, for icon buttons in a header bar or a column heading.
+   */
+  variant: 'primary' | 'secondary' | 'tertiary' = 'secondary';
   /**
    * `large` 40px (save bars, page actions), `medium` 36px (default), `slim` 32px (toolbars, table rows). Text is 14px (13px on slim).
    * On touch screens (`pointer: coarse`) every size is drawn at least 40px tall (icon-only: 40 x 40) and its hit area reaches
@@ -102,6 +105,10 @@ export class CmButton extends CmLocalizedElement {
         background: var(--cm-bg-surface); color: var(--cm-text-default); border-color: var(--cm-border-input);
       }
       :host(:not([variant='primary']):not([disabled]):not([loading])) .btn:hover { background: var(--cm-bg-hover); }
+      /* Tertiary (1.19): transparent until hovered; the label or icon carries it. */
+      :host([variant='tertiary']:not([disabled]):not([loading])) .btn { background: transparent; border-color: transparent; }
+      :host([variant='tertiary']:not([disabled]):not([loading])) .btn:hover { background: var(--cm-bg-hover); }
+      :host([variant='tertiary'][disabled]) .btn { background: transparent; border-color: transparent; }
       :host([disabled]) .btn, :host([loading]) .btn {
         background: var(--cm-action-disabled); border-color: var(--cm-action-disabled); color: var(--cm-action-disabled-text); cursor: not-allowed;
       }

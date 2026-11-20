@@ -181,7 +181,7 @@ const SECTIONS = [
     { path: '/start/flutter', title: 'Flutter' },
     { path: '/start/troubleshooting', title: 'Troubleshooting' },
   ] },
-  { id: 'apps', title: 'Build an admin app', pages: [
+  { id: 'apps', title: 'Build an admin app', nav: 'Admin apps', pages: [
     { path: '/apps', title: 'How apps run in the admin' },
     { path: '/apps/native', title: 'What makes an app native' },
     { path: '/apps/guidelines', title: 'App design guidelines' },
@@ -208,7 +208,7 @@ const SECTIONS = [
     { path: '/foundations/logo', title: 'Logo', group: 'Design' },
   ] },
   { id: 'icons', title: 'Icons', pages: [{ path: '/icons', title: 'Icon gallery' }] },
-  { id: 'releases', title: 'Releases and support', pages: [
+  { id: 'releases', title: 'Releases and support', nav: 'Releases', pages: [
     { path: '/releases', title: 'Release notes' },
     { path: '/releases/stability', title: 'Versioning and stability' },
     { path: '/support', title: 'Support and compatibility' },
@@ -2394,23 +2394,51 @@ pages['/contributing'] = () => ({ title: 'Contributing', html: `
   ${h2('Rules for every component')}
   <ul><li>No raw colour values in components.</li><li>Native events keep working; custom events are prefixed <code>cm-</code>.</li><li>Every colour pair goes in the token contrast check.</li><li>Elements register with <code>define()</code>, so loading the library twice is harmless.</li></ul>` });
 
-/* ---------------- Shell: nav, sidebar, breadcrumbs, router ---------------- */
-const nav = $('.topnav'), side = $('#sidebar'), main = $('#main'), layout = $('.layout');
-nav.innerHTML = SECTIONS.map((s) => `<a href="#${s.pages[0].path}" data-sec="${s.id}">${s.title}</a>`).join('');
-
-function renderSidebar(section, path) {
-  let html = `<nav aria-label="All sections" class="mobile-sections">${SECTIONS.map((s) => `<a href="#${s.pages[0].path}" ${s === section ? 'aria-current="true"' : ''}>${s.title}</a>`).join('')}</nav>`;
-  if (section) {
-    let group = null;
-    html += `<nav aria-label="${section.title}"><h2>${section.title}</h2>`;
-    for (const p of section.pages) {
-      if (p.group && p.group !== group) { group = p.group; html += `<h2>${group}</h2>`; }
-      html += `<a href="#${p.path}" ${p.path === path ? 'aria-current="page"' : ''}>${p.title}${p.status ? `<small class="st st--${p.status}">${STATUS[p.status].label}</small>` : ''}</a>`;
+/* ---------------- Shell: the Commmerce frame, breadcrumbs, router ---------------- */
+// Since 1.19 the site runs in cm-app-frame like every Commmerce product: cm-side-navigation (one item per section,
+// its pages as sub-items) on wide screens; cm-bottom-navigation and cm-mobile-menu (More) below 1024px.
+const frame = $('#docs-frame'), sideNav = $('#sidenav'), bottomNav = $('#bottomnav'), mobileMenu = $('#mobilemenu'), main = $('#main');
+const SECTION_ICONS = { start: 'rocket', apps: 'apps', components: 'box', patterns: 'book', foundations: 'eyedropper', icons: 'image', releases: 'tag' };
+const NAV_PREF = 'cm-docs-nav-collapsed';
+try { sideNav.collapsed = localStorage.getItem(NAV_PREF) === '1'; } catch {}
+const pageItem = (p, path) => ({ label: p.title, href: `#${p.path}`, value: p.path, current: p.path === path || undefined, badge: p.status ? STATUS[p.status].label : undefined });
+function renderNav(section, path) {
+  sideNav.items = [
+    { label: 'Home', icon: 'home', href: '#/', value: '/', current: path === '/' || undefined },
+    ...SECTIONS.map((s) => s.pages.length === 1
+      ? { ...pageItem(s.pages[0], path), label: s.title, icon: SECTION_ICONS[s.id] }
+      : { label: s.nav ?? s.title, icon: SECTION_ICONS[s.id], value: `section:${s.id}`, expanded: s === section || undefined, items: s.pages.map((p) => pageItem(p, path)) }),
+  ];
+  // Phones: the four places people go most, then More for everything (components open on a second screen, by group).
+  const tab = (id, label) => { const s = SECTIONS.find((x) => x.id === id); return { label: label ?? s.title, icon: SECTION_ICONS[id], href: `#${s.pages[0].path}`, value: s.pages[0].path, current: s === section || undefined }; };
+  const inMore = !!section && !['start', 'components', 'patterns'].includes(section.id);
+  bottomNav.items = [
+    { label: 'Home', icon: 'home', href: '#/', value: '/', current: path === '/' || undefined },
+    tab('start'), tab('components'), tab('patterns'),
+    { label: 'More', icon: 'menu', value: 'more', current: inMore || undefined },
+  ];
+  mobileMenu.items = SECTIONS.map((s) => {
+    if (s.id !== 'components') return { label: s.title, items: s.pages.map((p) => ({ ...pageItem(p, path), icon: undefined })) };
+    const groups = [];
+    for (const p of s.pages.slice(1)) {
+      const g = p.group ?? 'Other';
+      let entry = groups.find((x) => x.label === g);
+      if (!entry) groups.push(entry = { label: g, value: `group:${g}`, items: [] });
+      entry.items.push(pageItem(p, path));
     }
-    html += '</nav>';
-  }
-  side.innerHTML = html;
+    return { label: s.title, items: [pageItem(s.pages[0], path), ...groups] };
+  });
 }
+// Every navigation routes inside the page (hosted pages only allow plain #name hashes; go() translates).
+const onNavigate = (e) => {
+  const { href, value } = e.detail || {};
+  if (value === 'more' || !href) return;
+  e.preventDefault();
+  frame.menuOpen = false;
+  go(href.slice(1));
+};
+[sideNav, bottomNav, mobileMenu].forEach((n) => n.addEventListener('cm-navigate', onNavigate));
+sideNav.addEventListener('cm-collapse', (e) => { try { localStorage.setItem(NAV_PREF, e.detail.collapsed ? '1' : '0'); } catch {} });
 function crumbs(section, meta) {
   if (!section) return '';
   const items = [['Home', '/'], [section.title, section.pages[0].path]];
@@ -2451,9 +2479,7 @@ function route() {
   const page = (pages[path] ?? (() => ({ title: 'Page not found', html: `<h1>Page not found</h1><p class="lead">There is no page at this address. It may have moved when the site was reorganised.</p><p><a href="#/">Home</a> · <a href="#/start">Get started</a> · <a href="#/components">Components</a></p>` })))(params);
   const meta = allPages.find((p) => p.path === path);
   const section = meta?.section;
-  layout.classList.toggle('no-side', page.side === false);
-  renderSidebar(section, path);
-  nav.querySelectorAll('a').forEach((a) => (a.dataset.sec === section?.id ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+  renderNav(section, path);
   let pager = '';
   if (section) {
     const i = section.pages.findIndex((p) => p.path === path);
@@ -2466,7 +2492,7 @@ function route() {
   buildToc(main.firstElementChild, page);
   markWideTables();
   document.title = path === '/' ? 'Commmerce UI' : `${page.title} · Commmerce UI`;
-  side.classList.remove('open'); $('.menu-btn').setAttribute('aria-expanded', 'false');
+  frame.menuOpen = false;
   const s = params.get('s');
   if (s) jumpTo(s, false);
   else window.scrollTo(0, 0);
@@ -2563,8 +2589,8 @@ const effectiveTheme = () => {
 const setThemeUI = () => {
   const dark = effectiveTheme() === 'dark';
   document.documentElement.classList.toggle('is-dark', dark);
-  themeBtn.querySelector('cm-icon').name = dark ? 'sun' : 'moon';
-  themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  themeBtn.icon = dark ? 'sun' : 'moon';
+  themeBtn.label = dark ? 'Switch to light theme' : 'Switch to dark theme';
 };
 themeBtn.addEventListener('click', () => {
   const t = effectiveTheme() === 'dark' ? 'light' : 'dark';
@@ -2587,48 +2613,31 @@ new MutationObserver(() => {
   if (!saved && host && host !== document.documentElement.dataset.cmTheme) { document.documentElement.dataset.cmTheme = host; setThemeUI(); }
 }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-/* ---------------- Mobile menu ---------------- */
-$('.menu-btn').addEventListener('click', (e) => {
-  const open = side.classList.toggle('open');
-  e.currentTarget.setAttribute('aria-expanded', String(open));
-  e.currentTarget.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-});
-
-/* ---------------- Search ---------------- */
+/* ---------------- Search (cm-global-search in the header bar) ---------------- */
 const index = [
-  ...allPages.map((p) => ({ label: p.title, kind: p.status ? `${p.section.title} · ${STATUS[p.status].label}` : p.section.title, href: p.path })),
-  ...components.flatMap((c) => [c.tag, ...(c.parts ?? []).map((p) => p.tag)].map((t) => ({ label: t, kind: c.name, href: `/components/${c.slug}` }))),
-  ...tokens.filter((t) => t.cssVar).map((t) => ({ label: t.name, kind: 'Token', href: `/foundations/tokens?q=${t.name}` })),
-  ...iconNames.map((n) => ({ label: n, kind: 'Icon', href: `/icons?q=${n}` })),
+  ...allPages.map((p) => ({ label: p.title, kind: p.status ? `${p.section.title} · ${STATUS[p.status].label}` : p.section.title, href: p.path, group: 'Pages' })),
+  ...components.flatMap((c) => [c.tag, ...(c.parts ?? []).map((p) => p.tag)].map((t) => ({ label: t, kind: c.name, href: `/components/${c.slug}`, group: 'Elements' }))),
+  ...tokens.filter((t) => t.cssVar).map((t) => ({ label: t.name, kind: 'Token', href: `/foundations/tokens?q=${t.name}`, group: 'Tokens' })),
+  ...iconNames.map((n) => ({ label: n, kind: 'Icon', href: `/icons?q=${n}`, group: 'Icons' })),
 ];
-const q = $('#q'), results = $('#results'), searchBox = $('.search');
-let sel = -1, hits = [];
-const drawResults = () => {
-  const s = q.value.trim().toLowerCase();
-  if (!s) { results.hidden = true; q.setAttribute('aria-expanded', 'false'); return; }
-  const rank = (x) => (x.label.toLowerCase().startsWith(s) ? 0 : 1) + (x.kind === 'Token' || x.kind === 'Icon' ? 2 : 0);
-  hits = index.filter((x) => x.label.toLowerCase().includes(s)).sort((a, b) => rank(a) - rank(b)).slice(0, 12);
-  sel = hits.length ? 0 : -1;
-  results.innerHTML = hits.length ? hits.map((h, i) => `<li role="option" id="r${i}" aria-selected="${i === sel}"><a href="#${h.href}">${esc(h.label)}<small>${esc(h.kind)}</small></a></li>`).join('') : `<li class="empty">No results for "${esc(q.value)}"</li>`;
-  results.hidden = false; q.setAttribute('aria-expanded', 'true');
-  q.setAttribute('aria-activedescendant', sel >= 0 ? `r${sel}` : '');
-};
-q.addEventListener('input', drawResults);
-q.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-    e.preventDefault(); if (!hits.length) return;
-    sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length;
-    results.querySelectorAll('li').forEach((li, i) => li.setAttribute('aria-selected', String(i === sel)));
-    q.setAttribute('aria-activedescendant', `r${sel}`);
-  } else if (e.key === 'Enter' && sel >= 0) { go(hits[sel].href); closeSearch(); }
-  else if (e.key === 'Escape') closeSearch();
+const GROUP_ICONS = { Pages: 'book', Elements: 'code', Tokens: 'eyedropper', Icons: 'image' };
+const q = $('#q');
+q.addEventListener('cm-search', (e) => {
+  const s = e.detail.query.trim().toLowerCase();
+  if (!s) { q.results = []; return; }
+  const groups = [];
+  for (const g of ['Pages', 'Elements', 'Tokens', 'Icons']) {
+    const all = index.filter((x) => x.group === g && x.label.toLowerCase().includes(s))
+      .sort((a, b) => (a.label.toLowerCase().startsWith(s) ? 0 : 1) - (b.label.toLowerCase().startsWith(s) ? 0 : 1));
+    if (all.length) groups.push({ label: g, total: all.length, items: all.slice(0, 5).map((x) => ({ title: x.label, description: x.kind, href: `#${x.href}`, icon: GROUP_ICONS[g] })) });
+  }
+  q.results = groups;
 });
-results.addEventListener('click', (e) => { if (e.target.closest('a')) closeSearch(); });
-const closeSearch = () => { q.value = ''; results.hidden = true; q.setAttribute('aria-expanded', 'false'); searchBox.classList.remove('open'); q.blur(); };
-document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && !e.composedPath().some((n) => /^(INPUT|TEXTAREA|SELECT)$/.test(n.tagName) || n.isContentEditable)) { e.preventDefault(); searchBox.classList.add('open'); q.focus(); }
+q.addEventListener('cm-select', (e) => {
+  if (!e.detail.href) return;
+  e.preventDefault();
+  q.value = ''; q.results = [];
+  go(e.detail.href.slice(1));
 });
-searchBox.addEventListener('click', () => { if (getComputedStyle(q).display === 'none' || !searchBox.classList.contains('open')) { searchBox.classList.add('open'); q.focus(); } });
-document.addEventListener('click', (e) => { if (!searchBox.contains(e.target)) { results.hidden = true; searchBox.classList.remove('open'); } });
 
 route();

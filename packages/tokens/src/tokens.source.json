@@ -653,6 +653,14 @@
      "dark": "{bg-hover}"
     },
     "usage": "Background of a selected row in a resource list (since 1.11)."
+   },
+   {
+    "name": "account-ring",
+    "value": {
+     "light": "{border-strong}",
+     "dark": "{border-strong}"
+    },
+    "usage": "Ring around the account avatar button in the header (since 1.19). The refined look uses the light border."
    }
   ]
  },
@@ -1162,7 +1170,8 @@
      "count-bg": "{accent}",
      "count-text": "{text-on-accent}",
      "tab-indicator": "{accent}",
-     "bg-selected": "{accent-soft}"
+     "bg-selected": "{accent-soft}",
+     "account-ring": "{border-subtle}"
     },
     "light": {
      "bg-page": "#f5f6f4",

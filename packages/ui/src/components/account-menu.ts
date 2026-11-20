@@ -67,7 +67,7 @@ export class CmAccountMenu extends CmActionMenu {
       /* The avatar button: 36px round with a ring (40 and a 44px hit area on touch screens). */
       .trigger.account {
         position: relative; width: var(--cm-control-height-md, 36px); height: var(--cm-control-height-md, 36px); min-height: 0; padding: 2px;
-        border: var(--cm-border-1) solid var(--cm-border-strong); border-radius: var(--cm-radius-full); background: var(--cm-bg-surface);
+        border: var(--cm-border-1) solid var(--cm-account-ring, var(--cm-border-strong)); border-radius: var(--cm-radius-full); background: var(--cm-bg-surface);
       }
       .trigger.account:hover { background: var(--cm-bg-hover); }
       .trigger.account cm-avatar { --cm-avatar-size: 28px; } /* 36 less the 2px gap and 1px ring on each side */

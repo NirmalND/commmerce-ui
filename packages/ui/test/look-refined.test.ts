@@ -65,3 +65,47 @@ describe('refined look (1.11)', () => {
     expect(getComputedStyle(shadow('cm-button', '.count')).backgroundColor).toBe(rgb('#1ec81a'));
   });
 });
+
+describe('1.19 additions', () => {
+  it('tertiary button: no fill and no outline until hovered', async () => {
+    await mount('<cm-button variant="tertiary" icon="bell" icon-only label="Notifications"></cm-button><cm-button>Plain</cm-button>');
+    const [t, s] = [...document.querySelectorAll('cm-button')].map((b) => getComputedStyle(b.shadowRoot!.querySelector('.btn')!));
+    expect(t.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(t.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+    expect(s.borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
+  });
+  it('account ring: black by default, the light border in the refined look', async () => {
+    await mount('<cm-account-menu label="Account" name="Asha K"></cm-account-menu>');
+    const ring = () => getComputedStyle(document.querySelector('cm-account-menu')!.shadowRoot!.querySelector('.trigger.account')!).borderTopColor;
+    expect(ring()).toBe(rgb('#000000'));
+    root.setAttribute('data-cm-look', 'refined');
+    await nextFrame();
+    expect(ring()).toBe(rgb('#e3e6e1'));
+  });
+});
+
+describe('1.19: phone navigation marks the current page (was a CRM-only patch)', () => {
+  it('bottom navigation: bold label and a tinted pill behind the current icon', async () => {
+    await mount(`<cm-bottom-navigation label="Main">
+      <cm-nav-item label="Home" icon="home" href="#home" current></cm-nav-item>
+      <cm-nav-item label="Orders" icon="bag" href="#orders"></cm-nav-item></cm-bottom-navigation>`);
+    const [cur, other] = [...document.querySelector('cm-bottom-navigation')!.shadowRoot!.querySelectorAll('.item')] as HTMLElement[];
+    expect(getComputedStyle(cur).fontWeight).toBe('600');
+    expect(getComputedStyle(other).fontWeight).toBe('500');
+    expect(getComputedStyle(cur.querySelector('.icon')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(getComputedStyle(other.querySelector('.icon')!).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    root.setAttribute('data-cm-look', 'refined');
+    await nextFrame();
+    expect(getComputedStyle(cur.querySelector('.icon')!).backgroundColor).not.toBe(getComputedStyle(other.querySelector('.icon')!).backgroundColor);
+  });
+  it('mobile menu: the current row is tinted and bold', async () => {
+    await mount(`<cm-mobile-menu label="Menu"><cm-nav-item label="Panels">
+      <cm-nav-item label="Orders" icon="bag" href="#orders" current></cm-nav-item>
+      <cm-nav-item label="Products" icon="box" href="#products"></cm-nav-item></cm-nav-item></cm-mobile-menu>`);
+    const [cur, other] = [...document.querySelector('cm-mobile-menu')!.shadowRoot!.querySelectorAll('.card .row')] as HTMLElement[];
+    expect(cur.getAttribute('aria-current')).toBe('page');
+    expect(getComputedStyle(cur).fontWeight).toBe('600');
+    expect(getComputedStyle(cur).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(getComputedStyle(other).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  });
+});

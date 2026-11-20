@@ -75,6 +75,11 @@ export class CmMobileMenu extends CmLocalizedElement {
       }
       .row:focus-visible { outline: 2px solid var(--cm-border-strong); outline-offset: -2px; border-radius: var(--cm-radius-sm); }
       .row .icon { color: var(--cm-icon-responsive-menu); }
+      /* The current page (1.19, from the CRM): a tinted, bold row that reaches the card's edges less a small inset. */
+      .card .row[aria-current='page'] {
+        width: calc(100% + 2 * var(--cm-space-12)); margin-inline: calc(-1 * var(--cm-space-12)); padding-inline: calc(var(--cm-space-4) + var(--cm-space-12));
+        background: var(--cm-bg-selected); border-radius: var(--cm-radius-sm); font-weight: 600;
+      }
       /* Label and badge share a wrapping line (1.13): when both don't fit, the badge moves under the label instead of
          squeezing it, and the label breaks between words, never inside one (unless a single word is wider than the row). */
       .text { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--cm-space-4) var(--cm-space-8); }

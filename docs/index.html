@@ -16,26 +16,20 @@
 <script type="module" src="app.js"></script>
 
 <a class="skip" href="#main">Skip to content</a>
-<header class="top">
-  <button class="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar"><cm-icon name="menu" size="20"></cm-icon></button>
-  <a class="brand" href="#" aria-label="Commmerce UI home">
-    <img class="logo logo--light" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-black.svg" alt="" width="164" height="12" />
-    <img class="logo logo--dark" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-white.svg" alt="" width="164" height="12" />
-    <span class="brand-ui">UI</span>
-  </a>
-  <nav class="topnav" aria-label="Sections"></nav>
-  <div class="top-end">
-    <div class="search" role="search">
-      <cm-icon name="search" size="16"></cm-icon>
-      <input id="q" type="search" placeholder="Search" aria-label="Search the docs" autocomplete="off"
-        aria-controls="results" aria-expanded="false" role="combobox" aria-autocomplete="list" />
-      <kbd>/</kbd>
-      <ul id="results" role="listbox" hidden></ul>
-    </div>
-    <button class="icon-btn" id="theme" aria-label="Switch to dark theme" title="Switch theme"><cm-icon name="moon" size="18"></cm-icon></button>
-  </div>
-</header>
-<div class="layout">
-  <aside id="sidebar" class="sidebar" aria-label="Section navigation"></aside>
-  <main id="main" tabindex="-1"></main>
-</div>
+<!-- The site uses the Commmerce frame itself (1.19): header bar, side navigation, page panel; bottom navigation and mobile menu on phones. -->
+<cm-app-frame id="docs-frame" panel menu-item="more">
+  <cm-header-bar slot="header" search-label="Search the docs">
+    <a slot="logo" class="brand" href="#" aria-label="Commmerce UI home">
+      <img class="logo logo--light" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-black.svg" alt="" width="164" height="12" />
+      <img class="logo logo--dark" src="https://commmerce.com/assets/svg/commmerce-wordmark-tm-white.svg" alt="" width="164" height="12" />
+      <span class="brand-ui">UI</span>
+    </a>
+    <cm-global-search slot="search" id="q" label="Search the docs" placeholder="Search components, tokens, icons" shortcut="/"
+      empty-text="Nothing found. Try a component name, a tag such as cm-button, a token or an icon."></cm-global-search>
+    <cm-button slot="end" id="theme" variant="tertiary" icon-only icon="moon" label="Switch to dark theme"></cm-button>
+  </cm-header-bar>
+  <cm-side-navigation slot="navigation" id="sidenav" label="Docs" collapsible></cm-side-navigation>
+  <div id="main" tabindex="-1"></div>
+  <cm-bottom-navigation slot="bottom-navigation" id="bottomnav" label="Docs sections"></cm-bottom-navigation>
+  <cm-mobile-menu slot="mobile-menu" id="mobilemenu" label="All docs"></cm-mobile-menu>
+</cm-app-frame>

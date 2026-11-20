@@ -26,14 +26,13 @@ const toHash = (path) => (path === '/' ? '' : path.slice(1).replace(/\//g, '--')
 async function collectRoutes(browser) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(base);
-  await page.waitForSelector('.topnav a');
-  const sections = await page.$$eval('.topnav a', (as) => as.map((a) => a.getAttribute('href').slice(1)));
-  const routes = new Set(['/']);
-  for (const s of sections) {
-    await page.evaluate((h) => { location.hash = h; }, s.replace(/^\//, '').replace(/\//g, '--'));
-    await page.waitForFunction((p) => document.querySelector(`#sidebar a[href="#${p}"]`), s);
-    for (const h of await page.$$eval('#sidebar nav:not(.mobile-sections) a', (as) => as.map((a) => a.getAttribute('href').slice(1)))) routes.add(h);
-  }
+  // Since 1.19 the docs run in cm-app-frame: every page is an item (or sub-item) of the side navigation's data.
+  await page.waitForFunction(() => document.querySelector('#sidenav')?.items?.length);
+  const hrefs = await page.evaluate(() => {
+    const walk = (items) => items.flatMap((it) => [it.href, ...walk(it.items ?? [])]);
+    return walk(document.querySelector('#sidenav').items).filter(Boolean).map((h) => h.slice(1));
+  });
+  const routes = new Set(['/', ...hrefs]);
   await page.close();
   return [...routes];
 }

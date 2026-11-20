@@ -58,9 +58,12 @@ export class CmBottomNavigation extends CmLocalizedElement {
         color: var(--cm-text-tertiary); text-decoration: none; background: none; border: 0; border-radius: var(--cm-radius-sm); cursor: pointer;
       }
       .item:hover, .item[aria-current='page'] { color: var(--cm-text-default); }
-      .item[aria-current='page'] .icon { color: var(--cm-icon-selected); }
+      /* The current tab (1.19, from the CRM): bold label and a tinted pill behind the icon, so it shows in every look. */
+      .item[aria-current='page'] { font-weight: 600; }
+      .item[aria-current='page']:not(.primary) .icon { background: var(--cm-bg-selected); color: var(--cm-icon-selected); }
       .item:focus-visible { outline: 2px solid var(--cm-border-strong); outline-offset: 0; }
-      .icon { display: grid; place-items: center; width: var(--cm-icon-size-lg); height: var(--cm-icon-size-lg); }
+      .icon { display: grid; place-items: center; width: calc(var(--cm-space-48) + var(--cm-space-8)); height: calc(var(--cm-space-24) + var(--cm-space-4)); border-radius: var(--cm-radius-full); }
+      .primary .icon { width: var(--cm-icon-size-lg); height: var(--cm-icon-size-lg); }
       .primary .icon { color: var(--cm-action-primary-text); background: var(--cm-action-primary); border-radius: var(--cm-radius-xs); }
       .label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     `,
