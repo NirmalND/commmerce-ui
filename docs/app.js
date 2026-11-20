@@ -1,5 +1,5 @@
 import { components, planned, groupsOrder } from './content.js';
-import { STATUS, PREVIEW, STABLE, SUPPORT_EMAIL, packages, patterns, statesHtml, orderListHtml, wireOrderList, appFrameHtml, appFrameScript, appFrameReact } from './site.js';
+import { STATUS, PREVIEW, STABLE, SUPPORT_EMAIL, packages, patterns, statesHtml, orderListHtml, appFrameHtml, appFrameScript, appFrameReact } from './site.js';
 // A pattern's `frames`: `true` for the admin frame example, or { html, script, react, label } for its own page.
 const framesOf = (p) => (p.frames === true ? { html: appFrameHtml, script: appFrameScript, react: appFrameReact, label: 'admin frame' } : p.frames);
 import { releaseNotes } from './releases.js';

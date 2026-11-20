@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
-import type { CmCard, CmEmptyState, CmStatusTabs, CmResourceItem } from '../src/index.js';
+import type { CmCard, CmEmptyState, CmStatusTabs, CmResourceItem, CmLinkTabs } from '../src/index.js';
 
 const frames = (n = 2) => new Promise((r) => { const f = () => (--n ? requestAnimationFrame(f) : r(null)); requestAnimationFrame(f); });
 const rect = (el: Element) => el.getBoundingClientRect();
@@ -160,5 +160,37 @@ describe('cm-status-tabs fade when counts arrive later (CRM /v4 feedback)', () =
     expect(fits).toBe(true);
     expect(row.scrollWidth).toBeGreaterThan(row.clientWidth);
     expect(row.className).toMatch(/more-(end|both)/); // WebKit may already have scrolled the selected tab into view
+  });
+});
+
+describe('cm-link-tabs on phones (1.20.1)', () => {
+  const tabs = (current: string) => `<cm-link-tabs label="Settings sections">${['General', 'Payments', 'Shipping and delivery', 'Notifications', 'Domains']
+    .map((l) => `<cm-nav-item label="${l}" href="#${l}"${l === current ? ' current' : ''}></cm-nav-item>`).join('')}</cm-link-tabs>`;
+
+  it('a row too wide for its box fades the edge that has more tabs, and the fade follows the scroll', async () => {
+    const el = await mount<CmLinkTabs>(tabs('General'), 300);
+    const row = shadow(el, 'ul');
+    expect(row.scrollWidth).toBeGreaterThan(row.clientWidth);
+    expect(row.classList.contains('more-end')).toBe(true);
+    expect(getComputedStyle(row).maskImage).toContain('gradient');
+    row.scrollLeft = row.scrollWidth; row.dispatchEvent(new Event('scroll'));
+    await el.updateComplete; await frames();
+    expect(row.classList.contains('more-start')).toBe(true);
+    expect(row.classList.contains('more-end')).toBe(false);
+  });
+
+  it('scrolls the current tab into view without scrolling the page', async () => {
+    const before = window.scrollY;
+    const el = await mount<CmLinkTabs>(tabs('Domains'), 300);
+    const row = shadow(el, 'ul');
+    const a = rect(shadow(el, 'a[aria-current=page]'));
+    expect(a.right).toBeLessThanOrEqual(rect(row).right + 0.5);
+    expect(row.className).toMatch(/more-(start|both)/);
+    expect(window.scrollY).toBe(before);
+  });
+
+  it('a row that fits has no fade', async () => {
+    const el = await mount<CmLinkTabs>(tabs('General'), 900);
+    expect(shadow(el, 'ul').className).toBe('');
   });
 });
