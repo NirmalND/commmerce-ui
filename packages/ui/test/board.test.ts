@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
-import { page, userEvent } from '@vitest/browser/context';
+import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import { resetStrings, MoveModel, Announcer, listNavigation } from '../src/index.js';
@@ -334,14 +334,16 @@ describe('cm-board: the app decides', () => {
   it('controlled: cm-move fires but the board leaves the DOM and totals to the app, and refocuses the re-rendered card', async () => {
     const b = await mount(MARKUP.replace('<cm-board ', '<cm-board controlled '));
     const moves: BoardMoveDetail[] = [];
+    // The app re-renders when the test says so: a new element for the card in the new column, the old one removed.
+    // (A 20ms timer here flaked under load: the keyboard input could outlast it, before the "untouched" check.)
+    let apply = () => {};
     b.addEventListener('cm-move', (e) => {
       const d = (e as CustomEvent<BoardMoveDetail>).detail;
       moves.push(d);
-      // The app re-renders: a new element for the card in the new column, the old one removed.
-      setTimeout(() => {
+      apply = () => {
         d.card.remove();
         d.toColumn.insertAdjacentHTML('afterbegin', card(d.value, 'Ravi Stores'));
-      }, 20);
+      };
     });
     const k = b.card('m1')!;
     k.focus();
@@ -351,6 +353,7 @@ describe('cm-board: the app decides', () => {
     expect(moves).toHaveLength(1);
     expect(names(col(b, 'new'))).toEqual(['Ravi Stores', 'Asha Textiles']); // untouched until the app moves it
     expect(col(b, 'new').total).toBe(5);
+    apply();
     await vi.waitFor(() => expect(col(b, 'contacted').cards[0].value).toBe('m1'));
     const fresh = col(b, 'contacted').cards[0];
     await vi.waitFor(() => expect(onHandle(fresh)).toBe(true));

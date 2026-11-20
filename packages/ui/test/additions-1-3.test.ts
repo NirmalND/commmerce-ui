@@ -1,7 +1,7 @@
 // 1.3 additions for the CRM rebuild: option groups in select and combobox (#27), moving rows between nested
 // lists (#21), and card actions without a heading.
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import { setStrings, resetStrings } from '../src/index.js';

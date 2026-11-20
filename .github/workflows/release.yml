@@ -10,7 +10,7 @@ permissions:
   id-token: write  # lets npm trusted publishing verify this workflow (OIDC)
 jobs:
   publish:
-    runs-on: ubuntu-24.04  # Playwright 1.49 system deps match 24.04; ubuntu-latest moved on
+    runs-on: ubuntu-24.04  # pinned so Playwright's browser system deps stay stable; ubuntu-latest moves on
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

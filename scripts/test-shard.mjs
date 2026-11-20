@@ -72,12 +72,13 @@ function run(browser, shard, shards) {
     if (!files.length) continue;
     const cwd = join(root, 'packages', s.pkg);
     if (s.setup) execSync(s.setup, { cwd, stdio: 'inherit' });
-    const args = ['vitest', 'run', `--browser.name=${browser}`, '--reporter=default', '--reporter=json',
+    const args = ['vitest', 'run', '--reporter=default', '--reporter=json',
       `--outputFile.json=${join(root, 'test-reports', `${browser}--${s.id}--${shard}.json`)}`];
     if (s.config) args.push('--config', s.config);
     if (s.mode === 'changed') args.push('--changed', base, '--passWithNoTests');
     console.log(`\n${s.id} (${s.mode}): ${files.join(' ')}`);
-    const r = spawnSync('npx', [...args, ...files], { cwd, stdio: 'inherit' });
+    // The vitest configs read VITEST_BROWSER (vitest 4 has no --browser.name).
+    const r = spawnSync('npx', [...args, ...files], { cwd, stdio: 'inherit', env: { ...process.env, VITEST_BROWSER: browser } });
     if (r.status !== 0) failed = true; // keep going: every suite reports even if an earlier one failed
   }
   process.exit(failed ? 1 : 0);

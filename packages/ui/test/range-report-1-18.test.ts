@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
-import { page } from '@vitest/browser/context';
+import { page } from 'vitest/browser';
 import '../src/index.js';
 import { resolvePreset, type CmDateRangePicker } from '../src/index.js';
 

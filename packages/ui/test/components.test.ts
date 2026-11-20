@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '../src/index.js';
 import type { CmButton, CmTextField, CmCheckbox, CmBanner, CmCard, CmRadio, CmRadioGroup, CmToggle, CmSelect, CmSearch, CmFileUpload, CmOptionGroup, CmTag, CmPageHeader, CmActionBar, CmSaveBar, CmInfoPanel, CmInfoItem, CmAccordion, CmEmptyState, CmSkeleton, CmSkeletonDisplay, CmComment, CmCommentBox, CmSmartTip, CmSmartTips, CmPagination, CmStatusTabs, CmTableHeader, CmResourceList, CmResourceItem, CmNestedList, CmNestedItem, CmReportTile, CmReportTiles, CmSideNavigation, CmHeaderBar, CmBottomNavigation, CmMobileMenu, CmFlashOfferBar, CmLinkTabs, CmAppCard } from '../src/index.js';
 

@@ -1,6 +1,6 @@
 // 1.17: cm-color-picker (brand and recent colours, opacity, formats, gradients), colour sources, and the field's picker panel.
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import {

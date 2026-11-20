@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import '../src/index.js';
 import type { CmDatePicker, CmDateRangePicker, CmCombobox } from '../src/index.js';
 
