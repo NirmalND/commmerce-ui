@@ -1,0 +1,35 @@
+{
+  "name": "commmerce-ui-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/tokens",
+    "packages/icons",
+    "packages/ui",
+    "packages/ui-react",
+    "packages/app-bridge"
+  ],
+  "scripts": {
+    "build": "npm run build -w @commmerce/tokens && npm run build -w @commmerce/icons && npm run build -w @commmerce/ui && npm run build -w @commmerce/ui-react && npm run build -w @commmerce/app-bridge",
+    "test": "node scripts/check-scale.mjs && npm test -w @commmerce/ui && npm test -w @commmerce/ui-react && npm test -w @commmerce/app-bridge",
+    "lint": "npx --yes oxlint@1.90.0 --deny-warnings",
+    "typecheck": "npm run build -w @commmerce/tokens && npm run build -w @commmerce/icons && tsc -p packages/ui/tsconfig.json && tsc --noEmit -p packages/ui-react/tsconfig.json && tsc --noEmit -p packages/app-bridge/tsconfig.json",
+    "playground": "npm run build && npx --yes http-server@14.1.1 . -p 4500 -c-1 -o /playground/",
+    "docs:build": "npm run build && node scripts/build-docs.mjs",
+    "docs": "npm run docs:build && npx --yes http-server@14.1.1 docs -p 4600 -c-1 -s -o /dev.html",
+    "test:react19": "npm run test:react19 -w @commmerce/ui-react",
+    "test:packages": "node scripts/test-packages.mjs",
+    "publish:dry": "node scripts/publish.mjs",
+    "publish:npm": "node scripts/publish.mjs --yes",
+    "flutter:generate": "node scripts/build-flutter.mjs",
+    "a11y": "node scripts/a11y-audit.mjs",
+    "docs:check": "node scripts/check-responsive.mjs",
+    "check:scale": "node scripts/check-scale.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "esbuild": "0.24.0",
+    "happy-dom": "15.11.7",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8"
+  }
+}
