@@ -2,7 +2,7 @@
 // and per-file error states, menu and option rows, the tooltip, and the states of each. Sizes are read from px the
 // components set (heights, paddings, font sizes), never from text widths, so results don't depend on installed fonts.
 import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from 'vitest';
-import { page, userEvent, server } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import '@commmerce/tokens/tokens.css';
 import '../src/index.js';
 import type { CmCombobox, CmActionMenu, CmTooltip, CmFileUpload, CmSelect } from '../src/index.js';
@@ -145,8 +145,7 @@ describe('cm-combobox multiple: tags', () => {
     await key('{ArrowLeft}{ArrowLeft}');
     expect(deepActive()).toBe(shadow(el, 'input'));
   });
-  // Skipped in Firefox 157 until issue #2 is fixed (focus return / hover differ there; passes in Chromium and WebKit).
-  it.skipIf(server.browser === 'firefox')('states: hover darkens the outline, focus adds the ring, disabled greys the box and its tags', async () => {
+  it('states: hover darkens the outline, focus adds the ring, disabled greys the box and its tags', async () => {
     const el = await multi(['Dairy']);
     const box = shadow(el, '.box');
     const rest = getComputedStyle(box).borderTopColor;
