@@ -555,13 +555,15 @@ export function StoreName({ value, onChange }) {
   }, [onChange]);
   return <cm-text-field ref={ref} label="Store name" value={value} />;
 }` }])}
-  <p>Or install the React wrappers from npm (release candidate, version ${PREVIEW.version}):</p>
+  <p>Or install the React wrappers from npm (version ${PREVIEW.version}):</p>
   ${codeBlock([{ label: 'Terminal', lang: 'sh', code: 'npm install @commmerce/tokens @commmerce/ui-react' }, { label: 'main.jsx', lang: 'jsx', code: "import '@commmerce/tokens/fonts.css';\nimport '@commmerce/tokens/tokens.css';\nimport { Button, TextField } from '@commmerce/ui-react';" }])}
   <p>For a complete example app, download the <a href="#/apps/starter?s=react">React starter</a>: Vite and React 19 with the npm packages, an orders list with tabs, search, selection, a bulk action and pagination, and a product form with validation and the save bar, with browser tests.</p>
   ${h2('Vue, Angular, Svelte and Next.js')}
   <p>Setup code, the binding rules for each framework, and a tested starter app to download: <a href="#/start/frameworks">Vue, Angular, Svelte and Next.js</a>. For types, see <a href="#/start/typescript">TypeScript</a>.</p>
   ${h2('Packages')}
-  ${table(['Package', 'Status', 'What it is'], packages.map((p) => `<tr><td><code>${esc(p.name)}</code></td><td>${badge(p.status)}</td><td>${md(p.what)}</td></tr>`))}` });
+  ${table(['Package', 'Status', 'What it is'], packages.map((p) => `<tr><td><code>${esc(p.name)}</code></td><td>${badge(p.status)}</td><td>${md(p.what)}</td></tr>`))}
+  ${h2('Bun, pnpm and Yarn', 'bun')}
+  <p>The commands on these pages use npm; any package manager works the same. With Bun: <code>bun add @commmerce/tokens @commmerce/ui</code> (or <code>@commmerce/ui-react</code>), and <code>bun build</code> bundles them without warnings, keeping only the components you import. pnpm (<code>pnpm add</code>) and Yarn (<code>yarn add</code>) need nothing extra.</p>` });
 
 /* ---- Frameworks: Vue, Angular, Svelte, Next.js (examples/*-starter; docs/starters.js lists their files) ---- */
 const starterFiles = (s) => table(['File', 'What it does'], s.files.map(([f, d]) => `<tr><td><a href="vendor/${s.dir}/${f}" download="${f.split('/').pop()}"><code>${f}</code></a></td><td>${md(d)}</td></tr>`));
