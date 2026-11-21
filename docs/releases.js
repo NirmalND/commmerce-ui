@@ -1,6 +1,10 @@
 // Release notes, newest first. Cloud build sessions add an entry here when a batch ships
 // (an <h2 id="vX-Y-Z"> heading and a list). Plain HTML; internal links use href="#/path".
 export const releaseNotes = `
+  <h2 id="v1-20-2">v1.20.2</h2>
+  <ul>
+    <li>No changes to the components. Tests: the command palette, photo upload and combobox focus and hover checks run in Firefox again (they were skipped in 1.20.1 after the test tools upgrade), so every component is tested in Chromium, Firefox and WebKit.</li>
+  </ul>
   <h2 id="v1-20-1">v1.20.1</h2>
   <ul>
     <li><a href="#/components/link-tabs">Link tabs</a>: when the tabs don't fit (usually on phones), the row now fades at the edge that has more tabs past it, as <a href="#/components/status-tabs">status tabs</a> do, so the last tab no longer looks cut off. The current tab is scrolled into view when the page opens. Nothing changes when the tabs fit.</li>

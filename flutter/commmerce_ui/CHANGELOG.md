@@ -3,6 +3,10 @@
 The Flutter package shares its version number with the Commmerce UI web packages. Full release notes:
 https://commmerce.com/blog/commmerceui/#releases
 
+## 1.20.2
+
+* No Flutter changes (web: Firefox tests for three focus and hover checks run again).
+
 ## 1.20.1
 
 * No Flutter changes (web fix: link tabs fade the edge when they scroll on phones).
